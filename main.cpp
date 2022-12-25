@@ -1,10 +1,11 @@
-#include "src/include/game.h"
+#include "src/game_base/include/game.h"
 
-using namespace GAME_NAMESPACE;
+using App = GAME_NAMESPACE::Game;
 
 int main(int argc, char** argv)
 {
-	std::unique_ptr<Game> app = std::make_unique<Game>();
+	std::unique_ptr<App> app = std::make_unique<App>();
 	app->run();
+
 	return 0;
 }
