@@ -1,6 +1,8 @@
 #pragma once
 
 #include <functional>
+
+#include <glad/glad.h>
 #include <glfw3.h>
 
 #include "event.h"
