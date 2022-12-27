@@ -21,6 +21,7 @@ namespace GAME_NAMESPACE
 		Window(CallbackData& data);
 		~Window(); 
 
+		void clearScreen();
 		void update();
 
 		Window(const Window&) = delete;

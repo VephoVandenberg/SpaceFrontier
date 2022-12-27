@@ -45,12 +45,22 @@ namespace GAME_NAMESPACE
 				WindowCloseEvent event;
 				data->func(event);
 			});
+
+		glfwSetFramebufferSizeCallback(
+			m_window,
+			[](GLFWwindow* window, int width, int height) {
+				glViewport(0, 0, width, height);
+			});
+	}
+
+	void Window::clearScreen()
+	{
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
 	void Window::update()
 	{
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
 		glfwSwapBuffers(m_window);
 		glfwPollEvents();
 	}

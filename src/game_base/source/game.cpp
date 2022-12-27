@@ -36,6 +36,7 @@ namespace GAME_NAMESPACE
 	{
 		while (m_isRunning)
 		{
+			m_window->clearScreen();
 			m_window->update();
 		}
 	}
