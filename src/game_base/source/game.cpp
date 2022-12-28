@@ -1,43 +1,51 @@
 #include <functional>
 
+#include "../../system/include/resource_manager.h"	
+
 #include "../include/game.h"
 
-namespace GAME_NAMESPACE
+using namespace GAME_NAMESPACE;
+
+Game::Game()
+	: m_isRunning(true)
 {
-	Game::Game()
-		: m_isRunning(true)
-	{
-		init();
-	}
+	init();
+}
 
-	void Game::init()
-	{
-		CallbackData data;
-		data.func = std::bind(&Game::onEvent, this, std::placeholders::_1);
-		m_window = std::unique_ptr<Window>(new Window(data));
-	}
+void Game::init()
+{
+	System::CallbackData data;
+	data.func = std::bind(&Game::onEvent, this, std::placeholders::_1);
 
-	void Game::onEvent(Event& event)
-	{
-		switch (event.getType())
-		{
-			case EventType::CLOSE:
-			{
-				m_isRunning = false;
+	m_window = std::unique_ptr<System::Window>(new System::Window(data));
+	m_renderer = std::unique_ptr<System::Renderer>(new System::Renderer);
 
-			}break;
-			
-			default:
-			{}break;
-		}
-	}
+	System::ResourceManager::getInstance()
+		.setShader("simple", "shaders/simple_shader.vert", "shaders/simple_shader.frag");
+}
 
-	void Game::run()
+void Game::onEvent(Event& event)
+{
+	switch (event.getType())
 	{
-		while (m_isRunning)
-		{
-			m_window->clearScreen();
-			m_window->update();
-		}
+	case EventType::CLOSE:
+	{
+		m_isRunning = false;
+	}break;
+
+	default:
+	{}break;
 	}
 }
+	
+void Game::run()
+{
+	while (m_isRunning)
+	{
+		m_window->clearScreen();
+		m_renderer->draw(System::ResourceManager::getInstance().getShader("simple"));
+		m_window->update();
+	}
+}
+
+

@@ -4,22 +4,25 @@
 
 namespace GAME_NAMESPACE
 {
-	class Renderer
+	namespace System
 	{
-	public:
-		Renderer();
-		~Renderer() = default;
+		class Renderer
+		{
+		public:
+			Renderer();
+			~Renderer() = default;
 
-		void draw(Shader& shader);
+			void draw(Shader& shader);
 
-		Renderer(const Renderer&) = delete;
-		Renderer(const Renderer&&) = delete;
-		Renderer& operator=(const Renderer&) = delete;
-		Renderer& operator=(const Renderer&&) = delete;
+			Renderer(const Renderer&) = delete;
+			Renderer(const Renderer&&) = delete;
+			Renderer& operator=(const Renderer&) = delete;
+			Renderer& operator=(const Renderer&&) = delete;
 
-	private:
-		void init();
+		private:
+			void init();
 
-		unsigned int m_quadVAO;
-	};
+			unsigned int m_quadVAO;
+		};
+	}
 }

@@ -4,6 +4,7 @@
 
 #include "../../system/include/event.h"
 #include "../../system/include/window.h"
+#include "../../system/include/renderer.h"
 
 namespace GAME_NAMESPACE
 {
@@ -24,7 +25,9 @@ namespace GAME_NAMESPACE
 		void init();
 		void onEvent(Event& event);
 
-		std::unique_ptr<Window> m_window;
+		std::unique_ptr<System::Window> m_window = nullptr;
+		std::unique_ptr<System::Renderer> m_renderer = nullptr;
+
 		bool m_isRunning = false;
 	};
 }

@@ -9,31 +9,34 @@
 
 namespace GAME_NAMESPACE
 {
-	struct CallbackData
+	namespace System
 	{
-		using EventCallbackFn = std::function<void(Event&)>;
-		EventCallbackFn func;
-	};
+		struct CallbackData
+		{
+			using EventCallbackFn = std::function<void(Event&)>;
+			EventCallbackFn func;
+		};
 
-	class Window
-	{
-	public:
-		Window(CallbackData& data);
-		~Window(); 
+		class Window
+		{
+		public:
+			Window(CallbackData& data);
+			~Window();
 
-		void clearScreen();
-		void update();
+			void clearScreen();
+			void update();
 
-		Window(const Window&) = delete;
-		Window(const Window&&) = delete;
-		Window& operator=(const Window&) = delete;
-		Window& operator=(const Window&&) = delete;
+			Window(const Window&) = delete;
+			Window(const Window&&) = delete;
+			Window& operator=(const Window&) = delete;
+			Window& operator=(const Window&&) = delete;
 
-	private:
-		void init();
+		private:
+			void init();
 
-		CallbackData m_data;
+			CallbackData m_data;
 
-		GLFWwindow* m_window = nullptr;
-	};
+			GLFWwindow* m_window = nullptr;
+		};
+	}
 }
