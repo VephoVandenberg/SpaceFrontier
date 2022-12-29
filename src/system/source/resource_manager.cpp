@@ -5,6 +5,7 @@
 using namespace GAME_NAMESPACE::System;
 
 std::unordered_map<const char*, Shader> ResourceManager::m_shaders;
+std::unordered_map<const char*, Texture> ResourceManager::m_textures;
 std::unique_ptr<ResourceManager> ResourceManager::m_instance = nullptr;
 
 ResourceManager& ResourceManager::getInstance()
@@ -16,18 +17,34 @@ ResourceManager& ResourceManager::getInstance()
 	return *m_instance;
 }
 
-void ResourceManager::setShader(const char* shaderName, const char* vPath, const char* fPath)
+void ResourceManager::setShader(const char* sName, const char* vPath, const char* fPath)
 {
 	Shader shader(vPath, fPath);
-	m_shaders[shaderName] = shader;
+	m_shaders[sName] = shader;
 }
 
-Shader& ResourceManager::getShader(const char* shaderName) const
+Shader& ResourceManager::getShader(const char* sName) const
 {
-	if (m_shaders.find(shaderName) == m_shaders.end())
+	if (m_shaders.find(sName) == m_shaders.end())
 	{
-		std::cout << "ERROR::RESOURCE_MANAGER::NO_SUCH_KEY" << std::endl;
+		std::cout << "ERROR::RESOURCE_MANAGER::GET_SHADER::NO_SUCH_KEY" << std::endl;
 		exit(EXIT_FAILURE);
 	}
-	return m_shaders[shaderName];
+	return m_shaders[sName];
+}
+
+void ResourceManager::setTexture(const char* tName)
+{
+	Texture texture(tName);
+	m_textures[tName] = texture;
+}
+
+Texture& ResourceManager::getTexture(const char* tName) const
+{
+	if (m_textures.find(tName) == m_textures.end())
+	{
+		std::cout << "ERROR::RESOURCE_MANAGER::GET_SHADER::NO_SUCH_KEY" << std::endl;
+		exit(EXIT_FAILURE);
+	}
+	return m_textures[tName];
 }

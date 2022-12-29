@@ -1,6 +1,7 @@
 #pragma once
 
 #include "shader.h"
+#include "texture.h"
 
 namespace GAME_NAMESPACE
 {
@@ -13,6 +14,7 @@ namespace GAME_NAMESPACE
 			~Renderer() = default;
 
 			void draw(Shader& shader);
+			void draw(Shader& shader, Texture& texture);
 
 			Renderer(const Renderer&) = delete;
 			Renderer(const Renderer&&) = delete;

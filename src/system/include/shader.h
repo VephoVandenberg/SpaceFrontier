@@ -15,6 +15,7 @@ namespace GAME_NAMESPACE
 			Shader& operator=(const Shader&) = default;
 
 			void use();
+			void unbind();
 
 			void setBool(const std::string& name, bool value) const;
 			void setInt(const std::string& name, int value) const;

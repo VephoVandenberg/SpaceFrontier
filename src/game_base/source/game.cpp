@@ -22,6 +22,9 @@ void Game::init()
 
 	System::ResourceManager::getInstance()
 		.setShader("simple", "shaders/simple_shader.vert", "shaders/simple_shader.frag");
+
+	System::ResourceManager::getInstance()
+		.setTexture("textures/container.jpg");
 }
 
 void Game::onEvent(Event& event)

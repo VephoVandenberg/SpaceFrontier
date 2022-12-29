@@ -12,10 +12,10 @@ Renderer::Renderer()
 void Renderer::init()
 {
 	float vertices[] = {
-		0.0f, 0.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f,
-		1.0f, 1.0f, 0.0f
+		0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		1.0f, 1.0f, 0.0f, 1.0f, 1.0f
 	};
 
 
@@ -38,8 +38,11 @@ void Renderer::init()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 
 	glBindVertexArray(0);
 }
@@ -51,3 +54,10 @@ void Renderer::draw(Shader& shader)
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
+void Renderer::draw(Shader& shader, Texture& texture)
+{
+	shader.use();
+	texture.bind();
+	glBindVertexArray(m_quadVAO);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+}

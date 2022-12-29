@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "shader.h"
+#include "texture.h"
 
 namespace GAME_NAMESPACE
 {
@@ -17,8 +18,11 @@ namespace GAME_NAMESPACE
 
 			~ResourceManager() = default;
 
-			void setShader(const char* shaderName, const char* vPath, const char* fPath);
-			Shader& getShader(const char* shaderName) const;
+			void setShader(const char* sName, const char* vPath, const char* fPath);
+			Shader& getShader(const char* sName) const;
+
+			void setTexture(const char* tName);
+			Texture& getTexture(const char* tName) const;
 
 			ResourceManager(const ResourceManager&) = delete;
 			ResourceManager(const ResourceManager&&) = delete;
@@ -29,6 +33,7 @@ namespace GAME_NAMESPACE
 
 			static std::unique_ptr<ResourceManager> m_instance;
 			static std::unordered_map<const char*, Shader> m_shaders;
+			static std::unordered_map<const char*, Texture> m_textures;
 		};
 	}
 }
