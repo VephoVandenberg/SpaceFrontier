@@ -57,6 +57,7 @@ void Renderer::draw(Shader& shader)
 void Renderer::draw(Shader& shader, Texture& texture)
 {
 	shader.use();
+	shader.setInt("uTexture", 0);
 	texture.bind();
 	glBindVertexArray(m_quadVAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
