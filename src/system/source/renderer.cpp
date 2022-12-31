@@ -1,3 +1,4 @@
+#include <glm/gtc/matrix_transform.hpp>
 #include <glad/glad.h>
 
 #include "../include/renderer.h"
@@ -47,14 +48,18 @@ void Renderer::init()
 	glBindVertexArray(0);
 }
 
-void Renderer::draw(Shader& shader)
+void Renderer::draw(glm::vec3& scale, Shader& shader)
 {
 	shader.use();
+
+	glm::mat4 model = glm::scale(glm::mat4(1.0f), scale);
+	shader.setMatrix("uModel", model);
+	
 	glBindVertexArray(m_quadVAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
-void Renderer::draw(Shader& shader, Texture& texture)
+void Renderer::draw(glm::vec3& scale, Shader& shader, Texture& texture)
 {
 	shader.use();
 	shader.setInt("uTexture", 0);

@@ -1,13 +1,16 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+
+#include <glm/gtc/type_ptr.hpp>
 #include <glad/glad.h>
 
 #include "../include/shader.h"
 
 using namespace GAME_NAMESPACE::System;
 
-Shader::Shader(const char* vPath, const char* fPath)
+Shader::Shader(const char* vPath, const char* fPath) 
+	: ID(0)
 {
 	std::string vCode, fCode;
 	std::ifstream vFile, fFile;
@@ -79,12 +82,17 @@ Shader::Shader(const char* vPath, const char* fPath)
 	use();
 }
 
-void Shader::use()
+Shader::~Shader()
+{
+	glDeleteProgram(ID);
+}
+
+void Shader::use() const
 {
 	glUseProgram(ID);
 }
 
-void Shader::unbind()
+void Shader::unbind() const
 {
 	glUseProgram(0);
 }
@@ -102,4 +110,14 @@ void Shader::setInt(const std::string& name, int value) const
 void Shader::setFloat(const std::string& name, float value) const
 {
 	glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+}
+
+void Shader::setMatrix(const std::string& name, glm::mat4& matrix) const
+{
+	glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(matrix));
+}
+
+void Shader::setVector3f(const std::string& name, glm::vec3& vector) const
+{
+	glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, glm::value_ptr(vector));
 }

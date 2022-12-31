@@ -6,7 +6,8 @@
 
 using namespace GAME_NAMESPACE::System;
 
-Texture::Texture(const char* tPath)
+Texture::Texture(const char* tPath) 
+	: ID(0)
 {
 	stbi_set_flip_vertically_on_load(true);
 	unsigned char* data = stbi_load(tPath, &m_width, &m_height, &m_nrChannels, 0);

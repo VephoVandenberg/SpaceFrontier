@@ -10,6 +10,8 @@ constexpr auto title = "SpaceFrontier";
 
 Window::Window(CallbackData& data)
 	: m_data(data)
+	, m_width(width)
+	, m_height(height)
 {
 	init();
 }
@@ -28,7 +30,7 @@ void Window::init()
 		exit(EXIT_FAILURE);
 	}
 
-	m_window = glfwCreateWindow(width, height, title, nullptr, nullptr);
+	m_window = glfwCreateWindow(m_width, m_height, title, nullptr, nullptr);
 	glfwMakeContextCurrent(m_window);
 	glfwSetWindowUserPointer(m_window, &m_data);
 
@@ -51,6 +53,33 @@ void Window::init()
 		[](GLFWwindow* window, int width, int height) {
 			glViewport(0, 0, width, height);
 		});
+
+	glfwSetKeyCallback(
+		m_window,
+		[](GLFWwindow* window, int key, int scancode, int action, int mods) {
+			auto data = reinterpret_cast<CallbackData*>(glfwGetWindowUserPointer(window));
+			
+			switch (action)
+			{
+			case GLFW_PRESS:
+			{
+				KeyPressEvent event;
+				event.key = key;
+				data->func(event);
+			}break;
+
+			case GLFW_RELEASE:
+			{
+				std::cout << "Release" << std::endl;
+			}break;
+
+			case GLFW_REPEAT:
+			{
+				std::cout << "Repeat" << std::endl;
+			}break;
+
+			}
+		});
 }
 
 void Window::clearScreen()
@@ -64,4 +93,3 @@ void Window::update()
 	glfwSwapBuffers(m_window);
 	glfwPollEvents();
 }
-

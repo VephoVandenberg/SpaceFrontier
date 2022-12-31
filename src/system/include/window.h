@@ -26,6 +26,9 @@ namespace GAME_NAMESPACE
 			void clearScreen();
 			void update();
 
+			inline unsigned int getWidth() const { return m_width; }
+			inline unsigned int getHeight() const { return m_height; }
+
 			Window(const Window&) = delete;
 			Window(const Window&&) = delete;
 			Window& operator=(const Window&) = delete;
@@ -37,6 +40,9 @@ namespace GAME_NAMESPACE
 			CallbackData m_data;
 
 			GLFWwindow* m_window = nullptr;
+
+			unsigned int m_width;
+			unsigned int m_height;
 		};
 	}
 }

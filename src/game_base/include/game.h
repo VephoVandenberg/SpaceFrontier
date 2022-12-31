@@ -23,7 +23,9 @@ namespace GAME_NAMESPACE
 
 	private:
 		void init();
-		void onEvent(Event& event);
+		void onEvent(System::Event& event);
+		void processInput(int key, System::EventType event);
+		void render();
 
 		std::unique_ptr<System::Window> m_window = nullptr;
 		std::unique_ptr<System::Renderer> m_renderer = nullptr;
