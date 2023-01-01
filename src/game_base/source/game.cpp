@@ -27,7 +27,7 @@ void Game::init()
 		.setShader("simple", "shaders/simple_shader.vert", "shaders/simple_shader.frag");
 
 	System::ResourceManager::getInstance()
-		.setTexture("textures/container.jpg");
+		.setTexture("simple", "textures/container.jpg");
 
 	auto& shader = System::ResourceManager::getInstance().getShader("simple");
 	shader.use();
@@ -37,6 +37,9 @@ void Game::init()
 	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(static_cast<float>(m_window->getWidth())/2.0f, 
 		static_cast<float>(m_window->getHeight())/2.0f, 0.0f));
 	glm::mat4 projView = projection * view;
+
+	m_objects.push_back(GameModule::GameObj({300.0f, 300.0f, 0.0f }, System::ResourceManager::getInstance().getTexture("simple")));
+
 	shader.setMatrix("uProjView", projView);
 }
 
@@ -76,8 +79,10 @@ void Game::run()
 
 void Game::render()
 {
-	auto tmpScale = glm::vec3(200.0f, 300.0f, 0.0f);
-	m_renderer->draw(tmpScale, System::ResourceManager::getInstance().getShader("simple"));
+	for (auto& obj : m_objects)
+	{
+		obj.draw(System::ResourceManager::getInstance().getShader("simple"), *m_renderer, glm::vec3(-400.0f, -200.0f, 0.0f));
+	}
 }
 
 void Game::processInput(int key, System::EventType event)
@@ -86,12 +91,15 @@ void Game::processInput(int key, System::EventType event)
 	{
 	case GLFW_KEY_Q:
 	{
-
+		auto& shader = System::ResourceManager::getInstance().getShader("simple");
+		shader.use();
+		
 	}break;
 	
 	case GLFW_KEY_E:
 	{
-
+		auto& shader = System::ResourceManager::getInstance().getShader("simple");
+		shader.use();
 	}break;
 
 	default:

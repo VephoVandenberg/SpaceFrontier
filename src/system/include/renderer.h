@@ -13,8 +13,8 @@ namespace GAME_NAMESPACE
 			Renderer();
 			~Renderer() = default;
 
-			void draw(glm::vec3& scale, Shader& shader);
-			void draw(glm::vec3& scale, Shader& shader, Texture& texture);
+			void draw(glm::vec3& scale, glm::vec3& pos, Shader& shader);
+			void draw(glm::vec3& scale, glm::vec3& pos, Shader& shader, Texture& texture);
 
 			Renderer(const Renderer&) = delete;
 			Renderer(const Renderer&&) = delete;

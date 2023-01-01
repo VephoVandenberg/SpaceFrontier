@@ -48,20 +48,26 @@ void Renderer::init()
 	glBindVertexArray(0);
 }
 
-void Renderer::draw(glm::vec3& scale, Shader& shader)
+void Renderer::draw(glm::vec3& scale, glm::vec3& pos, Shader& shader)
 {
 	shader.use();
 
-	glm::mat4 model = glm::scale(glm::mat4(1.0f), scale);
+	glm::mat4 model = glm::translate(glm::mat4(1.0f), pos);
+	model = glm::scale(model, scale);
 	shader.setMatrix("uModel", model);
 	
 	glBindVertexArray(m_quadVAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
-void Renderer::draw(glm::vec3& scale, Shader& shader, Texture& texture)
+void Renderer::draw(glm::vec3& scale, glm::vec3& pos, Shader& shader, Texture& texture)
 {
 	shader.use();
+
+	glm::mat4 model = glm::translate(glm::mat4(1.0f), pos);
+	model = glm::scale(model, scale);
+	shader.setMatrix("uModel", model);
+
 	shader.setInt("uTexture", 0);
 	texture.bind();
 	glBindVertexArray(m_quadVAO);

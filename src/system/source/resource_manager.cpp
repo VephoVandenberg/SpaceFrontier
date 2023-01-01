@@ -33,9 +33,9 @@ Shader& ResourceManager::getShader(const char* sName) const
 	return m_shaders[sName];
 }
 
-void ResourceManager::setTexture(const char* tName)
+void ResourceManager::setTexture(const char* tName, const char *tPath)
 {
-	Texture texture(tName);
+	Texture texture(tPath);
 	m_textures[tName] = texture;
 }
 

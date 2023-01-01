@@ -21,7 +21,7 @@ namespace GAME_NAMESPACE
 			void setShader(const char* sName, const char* vPath, const char* fPath);
 			Shader& getShader(const char* sName) const;
 
-			void setTexture(const char* tName);
+			void setTexture(const char* tName, const char *tPath);
 			Texture& getTexture(const char* tName) const;
 
 			ResourceManager(const ResourceManager&) = delete;
