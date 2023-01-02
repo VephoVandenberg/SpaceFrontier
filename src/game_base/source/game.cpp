@@ -32,13 +32,14 @@ void Game::init()
 	auto& shader = System::ResourceManager::getInstance().getShader("simple");
 	shader.use();
 
-	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(m_window->getWidth()), 
+	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(m_window->getWidth()),
 		static_cast<float>(m_window->getHeight()), 0.0f, -1.0f, 1.0f);
-	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(static_cast<float>(m_window->getWidth())/2.0f, 
-		static_cast<float>(m_window->getHeight())/2.0f, 0.0f));
+	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(static_cast<float>(m_window->getWidth()) / 2.0f,
+		static_cast<float>(m_window->getHeight()) / 2.0f, 0.0f));
 	glm::mat4 projView = projection * view;
 
-	m_objects.push_back(GameModule::GameObj({300.0f, 300.0f, 0.0f }, System::ResourceManager::getInstance().getTexture("simple")));
+	m_objects.push_back(GameModule::GameObj({ 300.0f, 300.0f, 0.0f }, { 200.0f, 200.0f, 0.0f },
+		System::ResourceManager::getInstance().getTexture("simple")));
 
 	shader.setMatrix("uProjView", projView);
 }
@@ -53,27 +54,43 @@ void Game::onEvent(System::Event& event)
 	}break;
 
 	case System::EventType::KEY_PRESS:
+	{
+		auto& key = dynamic_cast<System::KeyPressEvent&>(event).key;
+		m_keys[key] = true;
+	}break;
+
 	case System::EventType::KEY_REPEAT:
+	{
+		auto& key = dynamic_cast<System::KeyRepeatEvent&>(event).key;
+		m_keys[key] = true;
+	}break;
+
 	case System::EventType::KEY_RELEASE:
 	{
-		auto key = dynamic_cast<System::KeyPressEvent&>(event).key;
-		processInput(key, event.getType());
+		auto& key = dynamic_cast<System::KeyReleaseEvent&>(event).key;
+		m_keys[key] = false;
 	}break;
 
 	default:
 	{}break;
 	}
 }
-	
+
 void Game::run()
 {
+	float previousFrame = 0.0f;
 	while (m_isRunning)
 	{
+		float currentFrame = glfwGetTime();
+		float dt = currentFrame - previousFrame;
+		previousFrame = currentFrame;
 		m_window->clearScreen();
-		
+
 		render();
 
 		m_window->update();
+
+		processInput(dt);
 	}
 }
 
@@ -81,28 +98,37 @@ void Game::render()
 {
 	for (auto& obj : m_objects)
 	{
-		obj.draw(System::ResourceManager::getInstance().getShader("simple"), *m_renderer, glm::vec3(-400.0f, -200.0f, 0.0f));
+		obj.draw(System::ResourceManager::getInstance().getShader("simple"), *m_renderer);
 	}
 }
 
-void Game::processInput(int key, System::EventType event)
+void Game::processInput(float dt)
 {
-	switch (key)
+	glm::vec3 deltaPos = { 0.0f, 0.0f, 0.0f };
+	float angle = 0.0f;
+	if (m_keys[GLFW_KEY_A])
 	{
-	case GLFW_KEY_Q:
-	{
-		auto& shader = System::ResourceManager::getInstance().getShader("simple");
-		shader.use();
-		
-	}break;
-	
-	case GLFW_KEY_E:
-	{
-		auto& shader = System::ResourceManager::getInstance().getShader("simple");
-		shader.use();
-	}break;
-
-	default:
-	{}break;
+		deltaPos.x = -50.0f * dt;
 	}
+	if (m_keys[GLFW_KEY_D])
+	{
+		deltaPos.x = 50.0f * dt;
+	}
+	if (m_keys[GLFW_KEY_W])
+	{
+		deltaPos.y = -50.0f * dt;
+	}
+	if (m_keys[GLFW_KEY_S])
+	{
+		deltaPos.y = 50.0f * dt;
+	}
+	if (m_keys[GLFW_KEY_Q])
+	{
+		angle += dt;
+	}
+	if (m_keys[GLFW_KEY_E])
+	{
+		angle -= dt;
+	}
+	m_objects[0].update(deltaPos, angle);
 }

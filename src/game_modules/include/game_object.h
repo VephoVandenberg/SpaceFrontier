@@ -13,11 +13,11 @@ namespace GAME_NAMESPACE
 		class GameObj
 		{
 		public:
-			GameObj(glm::vec3 scale);
-			GameObj(glm::vec3 scale, System::Texture& texture);
+			GameObj(glm::vec3 scale, glm::vec3 pos);
+			GameObj(glm::vec3 scale, glm::vec3 pos, System::Texture& texture);
 
-			void draw(System::Shader& shader, System::Renderer& renderer,
-				glm::vec3 pos, glm::vec3 rotation = { 0.0f, 0.0f, 0.0f });
+			void draw(System::Shader& shader, System::Renderer& renderer);
+			void update(glm::vec3 deltaPos , float angle);
 
 			GameObj() = default;
 			~GameObj() = default;
@@ -27,8 +27,10 @@ namespace GAME_NAMESPACE
 		private:
 			System::Texture m_texture;
 
+			glm::vec3 m_pos = {0.0f, 0.0f, 0.0f};
 			glm::vec3 m_color = {1.0f, 1.0f, 1.0f};
 			glm::vec3 m_scale = {1.0f, 1.0f, 0.0f};
+			float m_angle = 0.0f;
 		};
 	}
 }

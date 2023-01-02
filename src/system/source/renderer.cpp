@@ -48,11 +48,16 @@ void Renderer::init()
 	glBindVertexArray(0);
 }
 
-void Renderer::draw(glm::vec3& scale, glm::vec3& pos, Shader& shader)
+void Renderer::draw(float angle, glm::vec3& scale, glm::vec3& pos, Shader& shader)
 {
 	shader.use();
 
 	glm::mat4 model = glm::translate(glm::mat4(1.0f), pos);
+
+	model = glm::translate(model, glm::vec3(0.5f*scale.x, 0.5f*scale.y, 0.0f));
+	model = glm::rotate(model, angle, glm::vec3(0.0f, 0.0f, 1.0f));
+	model = glm::translate(model, glm::vec3(-0.5f * scale.x, -0.5f * scale.y, 0.0f));
+
 	model = glm::scale(model, scale);
 	shader.setMatrix("uModel", model);
 	
@@ -60,11 +65,19 @@ void Renderer::draw(glm::vec3& scale, glm::vec3& pos, Shader& shader)
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
-void Renderer::draw(glm::vec3& scale, glm::vec3& pos, Shader& shader, Texture& texture)
+void Renderer::draw(float angle, glm::vec3& scale, glm::vec3& pos, Shader& shader, Texture& texture)
 {
 	shader.use();
 
-	glm::mat4 model = glm::translate(glm::mat4(1.0f), pos);
+	glm::mat4 model = glm::mat4(1.0f);
+
+	model = glm::translate(model, glm::vec3(0.5f * scale.x, 0.5f * scale.y, 0.0f));
+	model = glm::rotate(model, angle, glm::vec3(0.0f, 0.0f, 1.0f));
+	model = glm::translate(model, glm::vec3(-0.5f * scale.x, -0.5f * scale.y, 0.0f));
+
+	model = glm::translate(model, pos);
+
+
 	model = glm::scale(model, scale);
 	shader.setMatrix("uModel", model);
 

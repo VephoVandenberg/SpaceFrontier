@@ -27,7 +27,7 @@ namespace GAME_NAMESPACE
 	private:
 		void init();
 		void onEvent(System::Event& event);
-		void processInput(int key, System::EventType event);
+		void processInput(float dt);
 		void render();
 
 		std::unique_ptr<System::Window> m_window = nullptr;
@@ -36,5 +36,6 @@ namespace GAME_NAMESPACE
 		std::vector<GameModule::GameObj> m_objects{};
 
 		bool m_isRunning = false;
+		bool m_keys[1024];
 	};
 }

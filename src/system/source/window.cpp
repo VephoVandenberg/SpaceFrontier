@@ -70,12 +70,16 @@ void Window::init()
 
 			case GLFW_RELEASE:
 			{
-				std::cout << "Release" << std::endl;
+				KeyReleaseEvent event;
+				event.key = key;
+				data->func(event);
 			}break;
 
 			case GLFW_REPEAT:
 			{
-				std::cout << "Repeat" << std::endl;
+				KeyRepeatEvent event;
+				event.key = key;
+				data->func(event);
 			}break;
 
 			}
