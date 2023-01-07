@@ -71,12 +71,13 @@ void Renderer::draw(float angle, glm::vec3& scale, glm::vec3& pos, Shader& shade
 
 	glm::mat4 model = glm::mat4(1.0f);
 
-	model = glm::translate(model, glm::vec3(0.5f * scale.x, 0.5f * scale.y, 0.0f));
 	model = glm::rotate(model, angle, glm::vec3(0.0f, 0.0f, 1.0f));
-	model = glm::translate(model, glm::vec3(-0.5f * scale.x, -0.5f * scale.y, 0.0f));
 
 	model = glm::translate(model, pos);
 
+	model = glm::translate(model, glm::vec3(0.5f * scale.x, 0.5f * scale.y, 0.0f));
+	model = glm::rotate(model, angle, glm::vec3(0.0f, 0.0f, 1.0f));
+	model = glm::translate(model, glm::vec3(-0.5f * scale.x, -0.5f * scale.y, 0.0f));
 
 	model = glm::scale(model, scale);
 	shader.setMatrix("uModel", model);

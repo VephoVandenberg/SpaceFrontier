@@ -7,7 +7,7 @@
 #include "../../system/include/window.h"
 #include "../../system/include/renderer.h"
 
-#include "../../game_modules/include/game_object.h"
+#include "../../game_modules/include/player.h"
 
 namespace GAME_NAMESPACE
 {
@@ -33,7 +33,8 @@ namespace GAME_NAMESPACE
 		std::unique_ptr<System::Window> m_window = nullptr;
 		std::unique_ptr<System::Renderer> m_renderer = nullptr;
 
-		std::vector<GameModule::GameObj> m_objects{};
+		std::unique_ptr<GameModule::Player> m_player = nullptr;
+
 
 		bool m_isRunning = false;
 		bool m_keys[1024];

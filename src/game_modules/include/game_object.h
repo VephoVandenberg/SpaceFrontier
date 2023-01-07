@@ -23,7 +23,9 @@ namespace GAME_NAMESPACE
 			~GameObj() = default;
 			GameObj(const GameObj&) = default;
 			GameObj& operator=(const GameObj&) = default;
-
+			
+			GameObj(const GameObj&&) = delete;
+			GameObj& operator=(const GameObj&&) = delete;
 		private:
 			System::Texture m_texture;
 
