@@ -17,7 +17,7 @@ namespace GAME_NAMESPACE
 			GameObj(glm::vec3 scale, glm::vec3 pos, System::Texture& texture);
 
 			void draw(System::Shader& shader, System::Renderer& renderer);
-			void update(glm::vec3 deltaPos , float angle);
+			virtual void update(glm::vec3 deltaPos , float angle);
 
 			GameObj() = default;
 			~GameObj() = default;
@@ -26,13 +26,14 @@ namespace GAME_NAMESPACE
 			
 			GameObj(const GameObj&&) = delete;
 			GameObj& operator=(const GameObj&&) = delete;
+		protected:
+			glm::vec3 m_pos = { 0.0f, 0.0f, 0.0f };
+			glm::vec3 m_color = { 1.0f, 1.0f, 1.0f };
+			glm::vec3 m_scale = { 1.0f, 1.0f, 0.0f };
+			float m_angle = 0.0f;
 		private:
 			System::Texture m_texture;
 
-			glm::vec3 m_pos = {0.0f, 0.0f, 0.0f};
-			glm::vec3 m_color = {1.0f, 1.0f, 1.0f};
-			glm::vec3 m_scale = {1.0f, 1.0f, 0.0f};
-			float m_angle = 0.0f;
 		};
 	}
 }

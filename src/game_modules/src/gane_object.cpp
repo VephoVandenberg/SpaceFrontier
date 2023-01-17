@@ -22,8 +22,8 @@ void GameObj::draw(System::Shader& shader, System::Renderer& renderer)
 	renderer.draw(m_angle, m_scale, m_pos, shader, m_texture);
 }
 
-void GameObj::update(glm::vec3 deltaPos, float angle)
+void GameObj::update(glm::vec3 newPos, float newAngle)
 {
-	m_pos += deltaPos;
-	m_angle += angle;
+	m_pos = newPos;
+	m_angle = newAngle;
 }

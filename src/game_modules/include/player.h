@@ -8,6 +8,13 @@ namespace GAME_NAMESPACE
 {
 	namespace GameModule
 	{
+		enum class MoveDir
+		{
+			Up = -1,
+			None,
+			Bottom
+		};
+
 		class Player : public GameObj
 		{
 		public:
@@ -22,8 +29,10 @@ namespace GAME_NAMESPACE
 			Player(const Player&&) = delete;
 			
 			void init();
+			void update(float dt, float angle, MoveDir dir);
 		private:
-			float health = 100.0f;
+			float m_health = 100.0f;
+			glm::vec3 m_velocity = {0.0f, 0.0f, 0.0f};
 		};
 	}
 }

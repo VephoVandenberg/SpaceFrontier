@@ -38,7 +38,7 @@ void Game::init()
 		static_cast<float>(m_window->getHeight()) / 2.0f, 0.0f));
 	glm::mat4 projView = projection * view;
 
-	m_player = std::unique_ptr<GameModule::Player>(new GameModule::Player({ 300.0f, 300.0f, 0.0f }, { 200.0f, 200.0f, 0.0f },
+	m_player = std::unique_ptr<GameModule::Player>(new GameModule::Player({ 50.0f, 50.0f, 0.0f }, { 200.0f, 200.0f, 0.0f },
 		System::ResourceManager::getInstance().getTexture("simple")));
 
 	shader.setMatrix("uProjView", projView);
@@ -101,31 +101,23 @@ void Game::render()
 
 void Game::processInput(float dt)
 {
-	glm::vec3 deltaPos = { 0.0f, 0.0f, 0.0f };
 	float angle = 0.0f;
-	if (m_keys[GLFW_KEY_Q])
-	{
-		angle -= dt;
-	}
-	if (m_keys[GLFW_KEY_E])
-	{
-		angle += dt;
-	}
+	GameModule::MoveDir moveDir = GameModule::MoveDir::None;;
 	if (m_keys[GLFW_KEY_A])
 	{
-		deltaPos.x = -50.0f * dt;
+		angle -= 0.005f;
 	}
 	if (m_keys[GLFW_KEY_D])
 	{
-		deltaPos.x = 50.0f * dt;
+		angle += 0.005f;
 	}
 	if (m_keys[GLFW_KEY_W])
 	{
-		deltaPos.y = -50.0f * dt;
+		moveDir = GameModule::MoveDir::Up;
 	}
 	if (m_keys[GLFW_KEY_S])
 	{
-		deltaPos.y = 50.0f * dt;
+		moveDir = GameModule::MoveDir::Bottom;
 	}
-	m_player->update(deltaPos, angle);
+	m_player->update(dt, angle, moveDir);
 }
