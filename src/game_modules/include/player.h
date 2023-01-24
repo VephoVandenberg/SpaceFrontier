@@ -32,6 +32,7 @@ namespace GAME_NAMESPACE
 			void update(float dt, float angle, MoveDir dir);
 		private:
 			float m_health = 100.0f;
+			float m_acceleration = 0.01f;
 			glm::vec3 m_velocity = {0.0f, 0.0f, 0.0f};
 		};
 	}

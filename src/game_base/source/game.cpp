@@ -24,10 +24,10 @@ void Game::init()
 	m_renderer = std::unique_ptr<System::Renderer>(new System::Renderer);
 
 	System::ResourceManager::getInstance()
-		.setShader("simple", "shaders/simple_shader.vert", "shaders/simple_shader.frag");
+		.setShader("simple", "shaders/base_obj_shader.vert", "shaders/base_obj_shader.frag");
 
 	System::ResourceManager::getInstance()
-		.setTexture("simple", "textures/container.jpg");
+		.setTexture("simple", "textures/player_ship.jpg");
 
 	auto& shader = System::ResourceManager::getInstance().getShader("simple");
 	shader.use();

@@ -25,6 +25,9 @@ void Renderer::init()
 		1, 2, 3
 	};
 
+	// glEnable(GL_BLEND);
+	// glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	unsigned int VBO, EBO;
 
 	glGenVertexArrays(1, &m_quadVAO);
