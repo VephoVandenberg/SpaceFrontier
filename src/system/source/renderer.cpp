@@ -25,9 +25,6 @@ void Renderer::init()
 		1, 2, 3
 	};
 
-	// glEnable(GL_BLEND);
-	// glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 	unsigned int VBO, EBO;
 
 	glGenVertexArrays(1, &m_quadVAO);
@@ -57,9 +54,9 @@ void Renderer::draw(float angle, glm::vec3& scale, glm::vec3& pos, Shader& shade
 
 	glm::mat4 model = glm::translate(glm::mat4(1.0f), pos);
 
-	model = glm::translate(model, glm::vec3(0.5f*scale.x, 0.5f*scale.y, 0.0f));
+	model = glm::translate(model, scale / 2.0f);
 	model = glm::rotate(model, angle, glm::vec3(0.0f, 0.0f, 1.0f));
-	model = glm::translate(model, glm::vec3(-0.5f * scale.x, -0.5f * scale.y, 0.0f));
+	model = glm::translate(model, -scale / 2.0f);
 
 	model = glm::scale(model, scale);
 	shader.setMatrix("uModel", model);

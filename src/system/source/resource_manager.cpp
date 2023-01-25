@@ -27,7 +27,7 @@ Shader& ResourceManager::getShader(const char* sName) const
 {
 	if (m_shaders.find(sName) == m_shaders.end())
 	{
-		std::cout << "ERROR::RESOURCE_MANAGER::GET_SHADER::NO_SUCH_KEY" << std::endl;
+		std::cout << "ERROR::RESOURCE_MANAGER::GET_SHADER::NO_SUCH_KEY::" << sName << std::endl;
 		exit(EXIT_FAILURE);
 	}
 	return m_shaders[sName];
@@ -43,7 +43,7 @@ Texture& ResourceManager::getTexture(const char* tName) const
 {
 	if (m_textures.find(tName) == m_textures.end())
 	{
-		std::cout << "ERROR::RESOURCE_MANAGER::GET_SHADER::NO_SUCH_KEY" << std::endl;
+		std::cout << "ERROR::RESOURCE_MANAGER::GET_SHADER::NO_SUCH_KEY::" << tName << std::endl;
 		exit(EXIT_FAILURE);
 	}
 	return m_textures[tName];

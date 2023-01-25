@@ -43,7 +43,7 @@ void Window::init()
 	glfwSetWindowCloseCallback(
 		m_window,
 		[](GLFWwindow* window) {
-			auto data = reinterpret_cast<CallbackData*>(glfwGetWindowUserPointer(window));
+			auto *data = reinterpret_cast<CallbackData*>(glfwGetWindowUserPointer(window));
 			WindowCloseEvent event;
 			data->func(event);
 		});
@@ -57,7 +57,7 @@ void Window::init()
 	glfwSetKeyCallback(
 		m_window,
 		[](GLFWwindow* window, int key, int scancode, int action, int mods) {
-			auto data = reinterpret_cast<CallbackData*>(glfwGetWindowUserPointer(window));
+			auto *data = reinterpret_cast<CallbackData*>(glfwGetWindowUserPointer(window));
 			
 			switch (action)
 			{
@@ -84,6 +84,30 @@ void Window::init()
 
 			}
 		});
+
+	glfwSetMouseButtonCallback(
+		m_window,
+		[](GLFWwindow* window, int button, int action, int mods) {
+			auto* data = reinterpret_cast<CallbackData*>(glfwGetWindowUserPointer(window));
+
+			switch (action)
+			{
+			case GLFW_PRESS:
+			{
+				KeyPressEvent event;
+				event.key = button;
+				data->func(event);
+			}break;
+			
+			case GLFW_RELEASE:
+			{
+				KeyReleaseEvent event;
+				event.key = button;
+				data->func(event);
+			}break;
+			}
+		}
+	);
 }
 
 void Window::clearScreen()

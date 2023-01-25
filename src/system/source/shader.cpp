@@ -84,7 +84,7 @@ Shader::Shader(const char* vPath, const char* fPath)
 
 Shader::~Shader()
 {
-	glDeleteProgram(ID);
+	// glDeleteProgram(ID);
 }
 
 void Shader::use() const
