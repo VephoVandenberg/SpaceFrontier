@@ -35,3 +35,11 @@ void GameObj::update(glm::vec3 newPos, float newAngle)
 	m_pos = newPos;
 	m_angle = newAngle;
 }
+
+bool GameObj::checkCollision(const GameObj& obj) const
+{
+	bool collisionX = m_pos.x + m_scale.x >= obj.m_pos.x && obj.m_pos.x + obj.m_scale.x >= m_pos.x;
+	bool collisionY = m_pos.y + m_scale.y >= obj.m_pos.y && obj.m_pos.y + obj.m_scale.y >= m_pos.y;
+
+	return collisionX && collisionY;
+}

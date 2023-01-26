@@ -18,6 +18,7 @@ namespace GAME_NAMESPACE
 
 			virtual void draw(System::Shader& shader, System::Renderer& renderer, bool hasTexture = true);
 			virtual void update(glm::vec3 deltaPos , float angle);
+			bool checkCollision(const GameObj& obj) const;
 
 			GameObj() = default;
 			virtual ~GameObj() = default;

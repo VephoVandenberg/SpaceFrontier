@@ -8,6 +8,7 @@
 #include "../../system/include/renderer.h"
 
 #include "../../game_modules/include/player.h"
+#include "../../game_modules/include/enemy.h"
 
 namespace GAME_NAMESPACE
 {
@@ -26,15 +27,18 @@ namespace GAME_NAMESPACE
 
 	private:
 		void init();
+		void initEnemies();
 		void onEvent(System::Event& event);
 		void processInput(float dt);
+		void processCollisions();
 		void render();
 
 		std::unique_ptr<System::Window> m_window = nullptr;
 		std::unique_ptr<System::Renderer> m_renderer = nullptr;
 
 		std::unique_ptr<GameModule::Player> m_player = nullptr;
-
+		
+		std::vector<GameModule::Enemy> m_enemies;
 
 		bool m_isRunning = false;
 		bool m_keys[1024];

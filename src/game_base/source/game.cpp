@@ -11,7 +11,8 @@
 using namespace GAME_NAMESPACE;
 
 constexpr glm::vec3 g_playerShipSize(80.0f, 80.0f, 0.0f);
-constexpr glm::vec3 g_playerShipPos(200.0f, 200.0f, 0.0f);
+constexpr glm::vec3 g_playerShipPos(500.0f, 500.0f, 0.0f);
+constexpr glm::vec3 g_baseEnemySize(80.0f, 80.0f, 0.0f);
 
 Game::Game()
 	: m_isRunning(true)
@@ -34,16 +35,19 @@ void Game::init()
 
 	System::ResourceManager::getInstance()
 		.setTexture("player", "textures/player_ship.jpg");
+	System::ResourceManager::getInstance()
+		.setTexture("enemy_base", "textures/enemy_ship.jpg");
 
 
 	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(m_window->getWidth()),
 		static_cast<float>(m_window->getHeight()), 0.0f, -1.0f, 1.0f);
-	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(static_cast<float>(m_window->getWidth()) / 2.0f,
-		static_cast<float>(m_window->getHeight()) / 2.0f, 0.0f));
+	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 	glm::mat4 projView = projection * view;
 
 	m_player = std::unique_ptr<GameModule::Player>(new GameModule::Player(g_playerShipSize, g_playerShipPos,
 		System::ResourceManager::getInstance().getTexture("player")));
+
+	initEnemies();
 
 	System::ResourceManager::getInstance().getShader("base_obj").use();
 	System::ResourceManager::getInstance().getShader("base_obj").setMatrix("uProjView", projView);
@@ -52,6 +56,17 @@ void Game::init()
 	System::ResourceManager::getInstance().getShader("base_proj").use();
 	System::ResourceManager::getInstance().getShader("base_proj").setMatrix("uProjView", projView);
 	System::ResourceManager::getInstance().getShader("base_proj").unbind();
+}
+
+void Game::initEnemies()
+{
+	for (int i = 0; i < 10; i++)
+	{
+		glm::vec3 pos(200.0f + (i + 1) *(g_baseEnemySize.x + 30.0f), 200.0f, 0.0f);
+		GameModule::Enemy enemy(pos, g_baseEnemySize,
+			System::ResourceManager::getInstance().getTexture("enemy_base"));
+		m_enemies.push_back(enemy);
+	}
 }
 
 void Game::onEvent(System::Event& event)
@@ -97,6 +112,7 @@ void Game::run()
 		m_window->clearScreen();
 
 		render();
+		processCollisions();
 
 		m_window->update();
 
@@ -108,19 +124,25 @@ void Game::render()
 {
 	m_player->draw(System::ResourceManager::getInstance().getShader("base_obj"), *m_renderer);
 	m_player->drawProjectiles(System::ResourceManager::getInstance().getShader("base_proj"), *m_renderer);
+
+	for (auto& enemy : m_enemies)
+	{
+		enemy.draw(System::ResourceManager::getInstance().getShader("base_obj"), *m_renderer);
+	}
 }
 
 void Game::processInput(float dt)
 {
 	float angle = 0.0f;
-	GameModule::MoveDir moveDir = GameModule::MoveDir::None;;
+	GameModule::MoveDir moveDir = GameModule::MoveDir::None;
+	// NOTE: Rework the rotation
 	if (m_keys[GLFW_KEY_A])
 	{
-		angle -= 0.005f;
+		angle -= 0.003f;
 	}
 	if (m_keys[GLFW_KEY_D])
 	{
-		angle += 0.005f;
+		angle += 0.003f;
 	}
 	if (m_keys[GLFW_KEY_W])
 	{
@@ -130,12 +152,20 @@ void Game::processInput(float dt)
 	{
 		moveDir = GameModule::MoveDir::Bottom;
 	}
-	m_player->update(dt, angle, moveDir);
+	m_player->update(dt, angle, m_window->getWidth(), m_window->getHeight(), moveDir);
 
 	// NOTE: This solution is not final
 	if (m_keys[GLFW_MOUSE_BUTTON_LEFT])
 	{
 		m_player->shoot();
 		m_keys[GLFW_MOUSE_BUTTON_LEFT] = false;
+	}
+}
+
+void Game::processCollisions()
+{
+	for (auto it = m_enemies.begin(); it < m_enemies.end(); it++)
+	{
+		m_player->checkProjEnemyCoollision(*it);
 	}
 }
