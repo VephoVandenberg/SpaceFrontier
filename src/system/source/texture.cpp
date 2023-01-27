@@ -34,6 +34,33 @@ Texture::Texture(const char* tPath)
 	stbi_image_free(data);
 }
 
+Texture::Texture(Texture&& texture)
+	: m_width(texture.m_width)
+	, m_height(texture.m_height)
+	, m_nrChannels(texture.m_nrChannels)
+{
+	ID = texture.ID;
+	texture.ID = 0;
+}
+
+Texture& Texture::operator=(Texture&& texture)
+{
+	if (ID == texture.ID)
+	{
+		return *this;
+	}
+
+	ID = texture.ID;
+	texture.ID = 0;
+
+	return *this;
+}
+
+Texture::~Texture()
+{
+	glDeleteTextures(1, &ID);
+}
+
 void Texture::bind()
 {
 	glActiveTexture(GL_TEXTURE0);

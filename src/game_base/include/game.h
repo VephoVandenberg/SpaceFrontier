@@ -21,9 +21,9 @@ namespace GAME_NAMESPACE
 		void run();
 
 		Game(const Game&) = delete;
-		Game(const Game&&) = delete;
+		Game(Game&&) = delete;
 		Game& operator=(const Game&) = delete;
-		Game& operator=(const Game&&) = delete;
+		Game& operator=(Game&&) = delete;
 
 	private:
 		void init();

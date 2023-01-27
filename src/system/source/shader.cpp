@@ -82,9 +82,28 @@ Shader::Shader(const char* vPath, const char* fPath)
 	use();
 }
 
+Shader::Shader(Shader&& shader)
+{
+	ID = shader.ID;
+	shader.ID = 0;
+}
+
+Shader& Shader::operator=(Shader&& shader)
+{
+	if (ID == shader.ID)
+	{
+		return *this;
+	}
+
+	ID = shader.ID;
+	shader.ID = 0;
+
+	return *this;
+}
+
 Shader::~Shader()
 {
-	// glDeleteProgram(ID);
+	glDeleteProgram(ID);
 }
 
 void Shader::use() const

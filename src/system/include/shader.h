@@ -10,10 +10,11 @@ namespace GAME_NAMESPACE
 		class Shader
 		{
 		public:
+
 			Shader(const char* vPath, const char* fPath);
+			Shader(Shader&& shader);
+			Shader& operator=(Shader&& shader);
 			~Shader();
-			Shader() = default;
-			Shader& operator=(const Shader&) = default;
 
 			void use() const;
 			void unbind() const;
@@ -23,10 +24,11 @@ namespace GAME_NAMESPACE
 			void setFloat(const std::string& name, float value) const;
 			void setMatrix(const std::string& name, glm::mat4& matrix) const;
 			void setVector3f(const std::string& name, glm::vec3& vector) const;
+			
+			Shader() = default;
 
+			Shader& operator=(const Shader&) = delete;
 			Shader(const Shader&) = delete;
-			Shader(const Shader&&) = delete; 
-			Shader& operator=(const Shader&&) = delete;
 
 		private:
 			unsigned int ID;

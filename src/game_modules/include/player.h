@@ -29,16 +29,15 @@ namespace GAME_NAMESPACE
 			Player() = default;
 			~Player() = default;
 
-			void init();
 			void update(float dt, float angle, float borderX, float borderY, MoveDir dir);
 			void drawProjectiles(System::Shader& shader, System::Renderer& renderer);
 			void shoot();
 			void checkProjEnemyCoollision(Enemy& enemy);
 
 			Player(const Player&) = delete;
+			Player(Player&&) = delete;
 			Player& operator=(const Player&) = delete;
-			Player& operator=(const Player&&) = delete;
-			Player(const Player&&) = delete;
+			Player& operator=(Player&&) = delete;
 			
 		private:
 			float m_health = 100.0f;

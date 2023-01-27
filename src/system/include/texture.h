@@ -9,16 +9,17 @@ namespace GAME_NAMESPACE
 		{
 		public:
 			Texture(const char* tPath);
-			
-			Texture() = default;
-			~Texture() = default;
-			Texture(const Texture&) = default;
-			Texture& operator=(const Texture&) = default;
+			Texture(Texture&& texture);
+			Texture& operator=(Texture&& texture);
+			~Texture();
+
 
 			void bind();
+				
+			Texture() = default;
 
-			Texture(const Texture&&) = delete;
-			Texture& operator=(const Texture&&) = delete;
+			Texture(const Texture& texture) = default;
+			Texture& operator=(const Texture&) = delete;
 
 		private:
 			unsigned int ID;

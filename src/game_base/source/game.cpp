@@ -63,9 +63,8 @@ void Game::initEnemies()
 	for (int i = 0; i < 10; i++)
 	{
 		glm::vec3 pos(200.0f + (i + 1) *(g_baseEnemySize.x + 30.0f), 200.0f, 0.0f);
-		GameModule::Enemy enemy(pos, g_baseEnemySize,
-			System::ResourceManager::getInstance().getTexture("enemy_base"));
-		m_enemies.push_back(enemy);
+		m_enemies.emplace_back(GameModule::Enemy(pos, g_baseEnemySize,
+			System::ResourceManager::getInstance().getTexture("enemy_base")));
 	}
 }
 

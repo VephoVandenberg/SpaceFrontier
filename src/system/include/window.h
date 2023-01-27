@@ -30,9 +30,9 @@ namespace GAME_NAMESPACE
 			inline unsigned int getHeight() const { return m_height; }
 
 			Window(const Window&) = delete;
-			Window(const Window&&) = delete;
+			Window(Window&&) = delete;
 			Window& operator=(const Window&) = delete;
-			Window& operator=(const Window&&) = delete;
+			Window& operator=(Window&&) = delete;
 
 		private:
 			void init();

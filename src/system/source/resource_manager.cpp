@@ -19,8 +19,7 @@ ResourceManager& ResourceManager::getInstance()
 
 void ResourceManager::setShader(const char* sName, const char* vPath, const char* fPath)
 {
-	Shader shader(vPath, fPath);
-	m_shaders[sName] = shader;
+	m_shaders[sName] = Shader(vPath, fPath);
 }
 
 Shader& ResourceManager::getShader(const char* sName) const
@@ -35,8 +34,7 @@ Shader& ResourceManager::getShader(const char* sName) const
 
 void ResourceManager::setTexture(const char* tName, const char *tPath)
 {
-	Texture texture(tPath);
-	m_textures[tName] = texture;
+	m_textures[tName] = Texture(tPath);
 }
 
 Texture& ResourceManager::getTexture(const char* tName) const

@@ -14,7 +14,7 @@ namespace GAME_NAMESPACE
 		{
 		public:
 			GameObj(glm::vec3 scale, glm::vec3 pos, float m_angle = 0.0f);
-			GameObj(glm::vec3 scale, glm::vec3 pos, System::Texture& texture);
+			GameObj(glm::vec3 scale, glm::vec3 pos, System::Texture& texture, float m_angle = 0.0f);
 
 			virtual void draw(System::Shader& shader, System::Renderer& renderer, bool hasTexture = true);
 			virtual void update(glm::vec3 deltaPos , float angle);
@@ -25,8 +25,8 @@ namespace GAME_NAMESPACE
 			GameObj(const GameObj&) = default;
 			GameObj& operator=(const GameObj&) = default;
 			
-			GameObj(const GameObj&&) = delete;
-			GameObj& operator=(const GameObj&&) = delete;
+			GameObj(GameObj&&) = default;
+			GameObj& operator=(GameObj&&) = default;
 		protected:
 			glm::vec3 m_pos = { 0.0f, 0.0f, 0.0f };
 			glm::vec3 m_color = { 1.0f, 1.0f, 1.0f };

@@ -21,8 +21,10 @@ namespace GAME_NAMESPACE
 
 			Enemy() = default;
 			~Enemy() = default;
-			Enemy(const Enemy & enemy) = default;
-			Enemy& operator=(const Enemy & enemy) = default;
+			Enemy(Enemy&& enemy) = default;
+			Enemy& operator=(Enemy&&) = default;
+			Enemy(const Enemy& enemy) = delete;
+			Enemy& operator=(const Enemy& enemy) = default;
 
 		private:
 			glm::vec3 m_velocity = { 0.0f, 0.0f, 0.0f };
