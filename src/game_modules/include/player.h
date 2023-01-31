@@ -26,14 +26,14 @@ namespace GAME_NAMESPACE
 		public:
 			Player(glm::vec3 scale, glm::vec3 pos, System::Texture& texture);
 
-			Player() = default;
-			~Player() = default;
-
 			void update(float dt, float angle, float borderX, float borderY, MoveDir dir);
 			void drawProjectiles(System::Shader& shader, System::Renderer& renderer);
 			void shoot();
 			void checkProjEnemyCoollision(Enemy& enemy);
 
+			~Player() = default;
+
+			Player() = delete;
 			Player(const Player&) = delete;
 			Player(Player&&) = delete;
 			Player& operator=(const Player&) = delete;
