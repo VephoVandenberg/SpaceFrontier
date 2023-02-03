@@ -58,7 +58,7 @@ Texture& Texture::operator=(Texture&& texture)
 
 Texture::~Texture()
 {
-	// glDeleteTextures(1, &ID);
+	glDeleteTextures(1, &ID);
 }
 
 void Texture::bind()

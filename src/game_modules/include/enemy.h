@@ -18,8 +18,6 @@ namespace GAME_NAMESPACE
 
 			void update(float dt);
 			void shoot();
-			void takeDamage();
-			bool isAlive() const;
 
 			Enemy() = default;
 			~Enemy() = default;
@@ -32,8 +30,6 @@ namespace GAME_NAMESPACE
 			glm::vec3 m_velocity = { 0.0f, 0.0f, 0.0f };
 
 			std::deque<Projectile> m_projectiles;
-
-			unsigned int m_health = 3;
 		};
 	}
 }

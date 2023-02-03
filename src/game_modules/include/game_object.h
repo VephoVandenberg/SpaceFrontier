@@ -24,6 +24,7 @@ namespace GAME_NAMESPACE
 			virtual ~GameObj() = default;
 			GameObj(const GameObj&) = default;
 			GameObj& operator=(const GameObj&) = default;
+			
 			GameObj(GameObj&&) = default;
 			GameObj& operator=(GameObj&&) = default;
 		protected:

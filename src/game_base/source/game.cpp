@@ -11,8 +11,8 @@
 using namespace GAME_NAMESPACE;
 
 constexpr glm::vec3 g_playerShipSize(80.0f, 80.0f, 0.0f);
+constexpr glm::vec3 g_playerShipPos(500.0f, 500.0f, 0.0f);
 constexpr glm::vec3 g_baseEnemySize(80.0f, 80.0f, 0.0f);
-constexpr float g_dAngle = 0.003f;
 
 Game::Game()
 	: m_isRunning(true)
@@ -44,9 +44,7 @@ void Game::init()
 	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 	glm::mat4 projView = projection * view;
 
-	glm::vec3 playerShipPos = glm::vec3(m_window->getWidth() / 2.0f, m_window->getHeight() / 2.0f, 0.0f);
-
-	m_player = std::unique_ptr<GameModule::Player>(new GameModule::Player(g_playerShipSize, playerShipPos,
+	m_player = std::unique_ptr<GameModule::Player>(new GameModule::Player(g_playerShipSize, g_playerShipPos,
 		System::ResourceManager::getInstance().getTexture("player")));
 
 	initEnemies();
@@ -64,7 +62,7 @@ void Game::initEnemies()
 {
 	for (int i = 0; i < 10; i++)
 	{
-		glm::vec3 pos(200.0f + (i + 1) * (g_baseEnemySize.x + 30.0f), 200.0f, 0.0f);
+		glm::vec3 pos(200.0f + (i + 1) *(g_baseEnemySize.x + 30.0f), 200.0f, 0.0f);
 		m_enemies.emplace_back(GameModule::Enemy(pos, g_baseEnemySize,
 			System::ResourceManager::getInstance().getTexture("enemy_base")));
 	}
@@ -139,11 +137,11 @@ void Game::processInput(float dt)
 	// NOTE: Rework the rotation
 	if (m_keys[GLFW_KEY_A])
 	{
-		angle -= g_dAngle;
+		angle -= 0.003f;
 	}
 	if (m_keys[GLFW_KEY_D])
 	{
-		angle += g_dAngle;
+		angle += 0.003f;
 	}
 	if (m_keys[GLFW_KEY_W])
 	{
@@ -165,18 +163,8 @@ void Game::processInput(float dt)
 
 void Game::processCollisions()
 {
-	for (auto& enemy : m_enemies)
+	for (auto it = m_enemies.begin(); it < m_enemies.end(); it++)
 	{
-		m_player->checkProjEnemyCoollision(enemy);
+		m_player->checkProjEnemyCoollision(*it);
 	}
-
-	// NOTE: Texture need to be investigated
-	m_enemies.erase(
-		std::remove_if(
-			m_enemies.begin(),
-			m_enemies.end(),
-			[](const GameModule::Enemy& enemy) {
-				return enemy.isAlive();
-			}),
-		m_enemies.end());
 }

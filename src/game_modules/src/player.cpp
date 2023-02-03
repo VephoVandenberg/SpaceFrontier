@@ -18,13 +18,13 @@ void Player::update(float dt, float angle, float borderX, float borderY, MoveDir
 
 	if (dir == MoveDir::Up)
 	{
-		m_velocity.x = glm::sin(m_angle) * m_acceleration;
+		m_velocity.x =  glm::sin(m_angle) * m_acceleration;
 		m_velocity.y = -glm::cos(m_angle) * m_acceleration;
 	}
 	else if (dir == MoveDir::Bottom)
 	{
 		m_velocity.x = -glm::sin(m_angle) * m_acceleration;
-		m_velocity.y = glm::cos(m_angle) * m_acceleration;
+		m_velocity.y =  glm::cos(m_angle) * m_acceleration;
 	}
 	m_pos += m_velocity;
 	m_velocity *= 0.995f;
@@ -58,17 +58,16 @@ void Player::drawProjectiles(System::Shader& shader, System::Renderer& renderer)
 
 void Player::checkProjEnemyCoollision(Enemy& enemy)
 {
-	m_projectiles.erase(
-		std::remove_if(
-			m_projectiles.begin(),
-			m_projectiles.end(),
-			[&](const Projectile& proj) {
-				if (proj.checkCollision(enemy))
-				{
-					enemy.takeDamage();
-					return true;
-				}
-				return false;
-			}),
-		m_projectiles.end());
+	// NOTE: fix the collision later
+	if (!m_projectiles.empty())
+	{
+		for (auto it = m_projectiles.begin(); it != m_projectiles.end(); it++)
+		{
+			if (it->checkCollision(enemy))
+			{
+				m_projectiles.erase(it);
+				break;
+			}
+		}
+	}
 }

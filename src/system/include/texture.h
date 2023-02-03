@@ -13,6 +13,7 @@ namespace GAME_NAMESPACE
 			Texture& operator=(Texture&& texture);
 			~Texture();
 
+
 			void bind();
 				
 			Texture() = default;
