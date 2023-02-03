@@ -30,6 +30,7 @@ namespace GAME_NAMESPACE
 			void drawProjectiles(System::Shader& shader, System::Renderer& renderer);
 			void shoot();
 			void checkProjEnemyCoollision(Enemy& enemy);
+			void draw(System::Shader& shader, System::Renderer& renderer, bool hasTexture = true) override;
 
 			~Player() = default;
 
@@ -42,8 +43,10 @@ namespace GAME_NAMESPACE
 		private:
 			float m_health = 100.0f;
 			float m_acceleration = 01.0f;
-			glm::vec3 m_velocity = {0.0f, 0.0f, 0.0f};
-			
+
+			glm::vec3 m_velocity = { 0.0f, 0.0f, 0.0f} ;
+			glm::vec3 m_cameraPos = { 0.0f, 0.0f, 0.0f };
+
 			std::list<Projectile> m_projectiles;
 		};
 	}

@@ -85,3 +85,29 @@ void Renderer::draw(float angle, glm::vec3& scale, glm::vec3& pos, Shader& shade
 	glBindVertexArray(m_quadVAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
+
+
+void Renderer::draw(float angle, glm::vec3& scale, glm::vec3& pos, glm::vec3& viewDir, Shader& shader, Texture& texture)
+{
+	shader.use();
+
+	glm::mat4 model = glm::mat4(1.0f);
+
+	model = glm::translate(model, pos);
+
+	model = glm::translate(model, scale / 2.0f);
+	model = glm::rotate(model, angle, glm::vec3(0.0f, 0.0f, 1.0f));
+	model = glm::translate(model, -scale / 2.0f);
+
+	model = glm::scale(model, scale);
+	shader.setMatrix("uModel", model);
+
+	glm::mat4 view = glm::translate(glm::mat4(1.0f), viewDir);
+	shader.setMatrix("uView", view);
+
+	shader.setInt("uTexture", 0);
+	texture.bind();
+	glBindVertexArray(m_quadVAO);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+}
+

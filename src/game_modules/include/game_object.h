@@ -31,7 +31,7 @@ namespace GAME_NAMESPACE
 			glm::vec3 m_color = { 1.0f, 1.0f, 1.0f };
 			glm::vec3 m_scale = { 1.0f, 1.0f, 0.0f };
 			float m_angle;
-		private:
+
 			System::Texture m_texture;
 
 		};

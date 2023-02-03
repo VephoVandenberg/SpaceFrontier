@@ -11,6 +11,7 @@ namespace GAME_NAMESPACE
 			Texture(const char* tPath);
 			Texture(Texture&& texture);
 			Texture& operator=(Texture&& texture);
+
 			~Texture();
 
 			void bind();
@@ -21,10 +22,14 @@ namespace GAME_NAMESPACE
 			Texture& operator=(const Texture&) = delete;
 
 		private:
+			friend class ResourceManager;
+
 			unsigned int ID;
 			int m_width;
 			int m_height;
 			int m_nrChannels;
+
+			bool m_isActive;
 		};
 	}
 }

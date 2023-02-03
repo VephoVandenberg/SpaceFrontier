@@ -10,8 +10,8 @@
 
 using namespace GAME_NAMESPACE;
 
-constexpr glm::vec3 g_playerShipSize(80.0f, 80.0f, 0.0f);
-constexpr glm::vec3 g_baseEnemySize(80.0f, 80.0f, 0.0f);
+constexpr glm::vec3 g_playerShipSize = { 80.0f, 80.0f, 0.0f };
+constexpr glm::vec3 g_baseEnemySize = { 80.0f, 80.0f, 0.0f };
 constexpr float g_dAngle = 0.003f;
 
 Game::Game()
@@ -42,7 +42,6 @@ void Game::init()
 	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(m_window->getWidth()),
 		static_cast<float>(m_window->getHeight()), 0.0f, -1.0f, 1.0f);
 	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-	glm::mat4 projView = projection * view;
 
 	glm::vec3 playerShipPos = glm::vec3(m_window->getWidth() / 2.0f, m_window->getHeight() / 2.0f, 0.0f);
 
@@ -52,13 +51,15 @@ void Game::init()
 	initEnemies();
 
 	System::ResourceManager::getInstance().getShader("base_obj").use();
-	System::ResourceManager::getInstance().getShader("base_obj").setMatrix("uProjView", projView);
+	System::ResourceManager::getInstance().getShader("base_obj").setMatrix("uProjection", projection);
+	System::ResourceManager::getInstance().getShader("base_obj").setMatrix("uView", view);
 	System::ResourceManager::getInstance().getShader("base_obj").unbind();
 
 	System::ResourceManager::getInstance().getShader("base_proj").use();
-	System::ResourceManager::getInstance().getShader("base_proj").setMatrix("uProjView", projView);
+	System::ResourceManager::getInstance().getShader("base_proj").setMatrix("uProjection", projection);
+	System::ResourceManager::getInstance().getShader("base_proj").setMatrix("uView", view);
 	System::ResourceManager::getInstance().getShader("base_proj").unbind();
-}
+} 
 
 void Game::initEnemies()
 {

@@ -17,6 +17,14 @@ ResourceManager& ResourceManager::getInstance()
 	return *m_instance;
 }
 
+ResourceManager::~ResourceManager()
+{
+	for (auto it = m_textures.begin(); it != m_textures.end(); it++)
+	{
+		it->second.m_isActive = false;
+	}
+}
+
 void ResourceManager::setShader(const char* sName, const char* vPath, const char* fPath)
 {
 	m_shaders[sName] = Shader(vPath, fPath);

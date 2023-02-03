@@ -8,6 +8,7 @@ using namespace GAME_NAMESPACE::System;
 
 Texture::Texture(const char* tPath) 
 	: ID(0)
+	, m_isActive(true)
 {
 	// stbi_set_flip_vertically_on_load(true);
 	unsigned char* data = stbi_load(tPath, &m_width, &m_height, &m_nrChannels, 0);
@@ -58,7 +59,10 @@ Texture& Texture::operator=(Texture&& texture)
 
 Texture::~Texture()
 {
-	// glDeleteTextures(1, &ID);
+	if (!m_isActive)
+	{
+		glDeleteTextures(1, &ID);
+	}
 }
 
 void Texture::bind()
