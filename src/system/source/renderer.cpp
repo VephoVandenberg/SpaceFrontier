@@ -87,7 +87,8 @@ void Renderer::draw(float angle, glm::vec3& scale, glm::vec3& pos, Shader& shade
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
-void Renderer::draw(float angle, glm::vec3& scale, glm::vec3& pos, glm::vec3& view, Shader& shader, Texture& texture)
+
+void Renderer::draw(float angle, glm::vec3& scale, glm::vec3& pos, glm::vec3& viewDir, Shader& shader, Texture& texture)
 {
 	shader.use();
 
@@ -102,8 +103,8 @@ void Renderer::draw(float angle, glm::vec3& scale, glm::vec3& pos, glm::vec3& vi
 	model = glm::scale(model, scale);
 	shader.setMatrix("uModel", model);
 
-	glm::mat4 viewMat = glm::translate(glm::mat4(1.0f), -view);
-	shader.setMatrix("uView", viewMat);
+	glm::mat4 view = glm::translate(glm::mat4(1.0f), -viewDir);
+	shader.setMatrix("uView", view);
 
 	shader.setInt("uTexture", 0);
 	texture.bind();

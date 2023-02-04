@@ -8,7 +8,7 @@ constexpr glm::vec3 g_projSize = { 2.0f, 15.0f, 0.0f };
 Player::Player(glm::vec3 pos, glm::vec3 scale, System::Texture& texture)
 	: GameObj(pos, scale, texture)
 	, m_acceleration(0.6f)
-	, m_cameraPos(0.0f, 0.0f, 0.0f)
+	, m_cameraPos(0.0f)
 {}
 
 // NOTE: Adapt dt to the movement
@@ -41,21 +41,12 @@ void Player::update(float dt, float angle, float borderX, float borderY, MoveDir
 	{
 		m_projectiles.pop_front();
 	}
-
 }
 
 void Player::shoot()
 {
-	glm::vec3 projPos = glm::vec3(m_pos.x + m_scale.x/2.0f, m_pos.y, 0.0f);
+	glm::vec3 projPos = glm::vec3(m_pos.x + m_scale.x/2.0f, m_pos.y + m_scale.y/3.0f, 0.0f);
 	m_projectiles.push_back(Projectile(projPos, g_projSize, m_color, m_velocity, m_angle));
-}
-
-void Player::drawProjectiles(System::Shader& shader, System::Renderer& renderer)
-{
-	for (auto& proj : m_projectiles)
-	{
-		proj.draw(shader, renderer, false);
-	}
 }
 
 void Player::draw(System::Shader& shader, System::Renderer& renderer, bool hasTexture)
@@ -63,6 +54,15 @@ void Player::draw(System::Shader& shader, System::Renderer& renderer, bool hasTe
 	if (hasTexture)
 	{
 		renderer.draw(m_angle, m_scale, m_pos, m_cameraPos, shader, m_texture);
+	}
+
+}
+
+void Player::drawProjectiles(System::Shader& shader, System::Renderer& renderer)
+{
+	for (auto& proj : m_projectiles)
+	{
+		proj.draw(shader, renderer, false);
 	}
 }
 

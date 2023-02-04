@@ -16,7 +16,9 @@ namespace GAME_NAMESPACE
 		public:
 			static ResourceManager& getInstance();
 
-			~ResourceManager() = default;
+			~ResourceManager();
+
+			static void clear();
 
 			void setShader(const char* sName, const char* vPath, const char* fPath);
 			Shader& getShader(const char* sName) const;

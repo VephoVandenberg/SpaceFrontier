@@ -10,8 +10,11 @@
 
 using namespace GAME_NAMESPACE;
 
-constexpr glm::vec3 g_playerShipSize(80.0f, 80.0f, 0.0f);
-constexpr glm::vec3 g_baseEnemySize(80.0f, 80.0f, 0.0f);
+
+constexpr glm::vec3 g_playerShipSize = { 80.0f, 80.0f, 0.0f };
+constexpr glm::vec3 g_baseEnemySize = { 80.0f, 80.0f, 0.0f };
+constexpr float g_dAngle = 0.003f;
+
 
 Game::Game()
 	: m_isRunning(true)
@@ -57,7 +60,7 @@ void Game::init()
 	System::ResourceManager::getInstance().getShader("base_proj").setMatrix("uProjection", projection);
 	System::ResourceManager::getInstance().getShader("base_proj").setMatrix("uView", view);
 	System::ResourceManager::getInstance().getShader("base_proj").unbind();
-}
+} 
 
 void Game::initEnemies()
 {

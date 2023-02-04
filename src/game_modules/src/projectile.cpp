@@ -2,7 +2,7 @@
 
 using namespace GAME_NAMESPACE::GameModule;
 
-constexpr float g_projVelocity = 1.5f;
+constexpr float g_projVelocity = 1.3f;
 
 Projectile::Projectile(glm::vec3 pos, glm::vec3 scale, glm::vec3 color, glm::vec3 shipVelocity, float angle)
 	: GameObj(pos, scale, angle)
@@ -15,7 +15,7 @@ Projectile::Projectile(glm::vec3 pos, glm::vec3 scale, glm::vec3 color, glm::vec
 
 void Projectile::update()
 {
-	m_pos += m_velocity;
+	m_pos += m_velocity + m_additionalVelocity;
 }
 
 // NOTE change this code
