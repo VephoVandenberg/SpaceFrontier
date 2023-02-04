@@ -2,7 +2,7 @@
 
 using namespace GAME_NAMESPACE::GameModule;
 
-GameObj::GameObj(glm::vec3 scale, glm::vec3 pos, float angle) 
+GameObj::GameObj(glm::vec3 pos, glm::vec3 scale, float angle)
 	: m_pos(pos)
 	, m_scale(scale)
 	, m_angle(angle)
@@ -10,7 +10,7 @@ GameObj::GameObj(glm::vec3 scale, glm::vec3 pos, float angle)
 
 }
 
-GameObj::GameObj(glm::vec3 scale, glm::vec3 pos, System::Texture& texture, float angle)
+GameObj::GameObj(glm::vec3 pos, glm::vec3 scale, System::Texture& texture, float angle)
 	: m_pos(pos)
 	, m_scale(scale)
 	, m_angle(angle)

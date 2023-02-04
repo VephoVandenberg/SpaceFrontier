@@ -15,6 +15,8 @@ namespace GAME_NAMESPACE
 
 			void draw(float angle, glm::vec3& scale, glm::vec3& pos, Shader& shader);
 			void draw(float angle, glm::vec3& scale, glm::vec3& pos, Shader& shader, Texture& texture);
+			void draw(float angle, glm::vec3& scale, glm::vec3& pos, glm::vec3& view, Shader& shader, Texture& texture);
+
 
 			Renderer(const Renderer&) = delete;
 			Renderer(const Renderer&&) = delete;
