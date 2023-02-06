@@ -23,11 +23,11 @@ void GameObj::draw(System::Shader& shader, System::Renderer& renderer, bool hasT
 {
 	if (hasTexture)
 	{
-		renderer.draw(m_angle, m_scale, m_pos, shader, m_texture);
+		renderer.draw(m_angle, m_pos, m_scale, shader, m_texture);
 	}
 	else
 	{
-		renderer.draw(m_angle, m_scale, m_pos, shader);
+		renderer.draw(m_angle, m_pos, m_scale, shader);
 	}
 }
 

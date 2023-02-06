@@ -15,6 +15,8 @@ constexpr glm::vec3 g_playerShipSize = { 80.0f, 80.0f, 0.0f };
 constexpr glm::vec3 g_baseEnemySize = { 80.0f, 80.0f, 0.0f };
 constexpr float g_dAngle = 0.003f;
 
+glm::vec3 s_cameraView = { 0.0f, 0.0f, 0.0f };
+
 
 Game::Game()
 	: m_isRunning(true)
@@ -125,12 +127,12 @@ void Game::run()
 
 void Game::render()
 {
-	m_player->draw(System::ResourceManager::getInstance().getShader("base_obj"), *m_renderer);
-	m_player->drawProjectiles(System::ResourceManager::getInstance().getShader("base_proj"), *m_renderer);
+	m_player->draw(System::ResourceManager::getInstance().getShader("base_obj"), *m_renderer, s_cameraView);
+	m_player->drawProjectiles(System::ResourceManager::getInstance().getShader("base_proj"), *m_renderer, s_cameraView);
 
 	for (auto& enemy : m_enemies)
 	{
-		enemy.draw(System::ResourceManager::getInstance().getShader("base_obj"), *m_renderer);
+		enemy.draw(System::ResourceManager::getInstance().getShader("base_obj"), * m_renderer);
 	}
 }
 
@@ -155,20 +157,33 @@ void Game::processInput(float dt)
 	{
 		moveDir = GameModule::MoveDir::Bottom;
 	}
-	m_player->update(dt, angle, m_window->getWidth(), m_window->getHeight(), moveDir);
+	m_player->update(dt, angle, m_window->getWidth(), m_window->getHeight(), s_cameraView, moveDir);
 
 	// NOTE: This solution is not final
 	if (m_keys[GLFW_MOUSE_BUTTON_LEFT])
 	{
-		m_player->shoot();
+		m_player->shoot(s_cameraView);
 		m_keys[GLFW_MOUSE_BUTTON_LEFT] = false;
 	}
 }
 
 void Game::processCollisions()
 {
-	for (auto it = m_enemies.begin(); it < m_enemies.end(); it++)
+	for (auto& enemy : m_enemies)
 	{
-		m_player->checkProjEnemyCoollision(*it);
+		m_player->checkProjEnemyCoollision(enemy);
 	}
+
+	m_enemies.erase(
+		std::remove_if(
+			m_enemies.begin(),
+			m_enemies.end(),
+			[](const GameModule::Enemy& enemy) {
+				if (enemy.isAlive())
+				{
+					return false;
+				}
+				return true;
+			}),
+		m_enemies.end());
 }

@@ -13,10 +13,11 @@ namespace GAME_NAMESPACE
 		class Projectile : public GameObj
 		{
 		public:
-			Projectile(glm::vec3 pos, glm::vec3 scale, glm::vec3 color, glm::vec3 velocitiy, float angle);
+			Projectile(glm::vec3 pos, glm::vec3 scale, glm::vec3 color, glm::vec3 velocitiy, glm::vec3 cameraPos, float angle);
 
 			void update();
-			bool isOut(float borderX, float borderY) const;
+			bool isOut(float left, float right, float bottom, float up) const;
+			void draw(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos, bool hasTexture = true);
 
 			Projectile() = default;
 			~Projectile() = default;
@@ -24,8 +25,9 @@ namespace GAME_NAMESPACE
 			Projectile(Projectile&&) = default;
 			Projectile& operator=(const Projectile&) = default;
 			Projectile& operator=(Projectile&&) = default;
+
 		private:
-			glm::vec3 m_velocity = {0.0f, 0.0f, 0.0f};
+			glm::vec3 m_velocity = { 0.0f, 0.0f, 0.0f };
 			glm::vec3 m_additionalVelocity = { 0.0f, 0.0f, 0.0f };
 		};
 	}

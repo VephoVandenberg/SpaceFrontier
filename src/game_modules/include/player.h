@@ -29,11 +29,11 @@ namespace GAME_NAMESPACE
 			Player() = default;
 			~Player() = default;
 
-			void update(float dt, float angle, float borderX, float borderY, MoveDir dir);
-			void drawProjectiles(System::Shader& shader, System::Renderer& renderer);
-			void shoot();
+			void update(float dt, float angle, float borderX, float borderY, glm::vec3& cameraPos, MoveDir dir);
+			void drawProjectiles(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos);
+			void draw(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos, bool hasTexture = true);
+			void shoot(const glm::vec3& cameraPos);
 			void checkProjEnemyCoollision(Enemy& enemy);
-			void draw(System::Shader& shader, System::Renderer& renderer, bool hasTexture = true) override;
 
 			Player(const Player&) = delete;
 			Player(Player&&) = delete;
@@ -45,7 +45,6 @@ namespace GAME_NAMESPACE
 			float m_acceleration = 01.0f;
 
 			glm::vec3 m_velocity = { 0.0f, 0.0f, 0.0f} ;
-			glm::vec3 m_cameraPos = { 0.0f, 0.0f, 0.0f };
 
 			std::list<Projectile> m_projectiles;
 		};
