@@ -3,39 +3,45 @@
 using namespace GAME_NAMESPACE::GameModule;
 
 constexpr unsigned int g_fullMag = 64;
+constexpr float g_borderAddition = 200.0f;
 constexpr glm::vec3 g_projSize = { 2.0f, 15.0f, 0.0f };
 
 Player::Player(glm::vec3 pos, glm::vec3 scale, System::Texture& texture)
 	: GameObj(pos, scale, texture)
-	, m_acceleration(0.5f)
+	, m_acceleration(400.0f)
 {}
 
 void Player::update(float dt, float angle, float borderX, float borderY, glm::vec3& cameraPos, MoveDir dir)
 {
 	// Position update
-	m_angle += angle * 0.5f;
+	
 
 	if (dir == MoveDir::Up)
 	{
+		m_angle += angle * 0.5f;
 		m_velocity.x = glm::sin(m_angle) * m_acceleration;
 		m_velocity.y = -glm::cos(m_angle) * m_acceleration;
 	}
 	else if (dir == MoveDir::Bottom)
 	{
+		m_angle -= angle * 0.5f;
 		m_velocity.x = -glm::sin(m_angle) * m_acceleration;
 		m_velocity.y = glm::cos(m_angle) * m_acceleration;
 	}
-	m_pos += m_velocity;
-	cameraPos += m_velocity;
+	m_pos += m_velocity * dt;
+	cameraPos += m_velocity * dt;
 	m_velocity *= 0.995f;
 
 	// Projectile update
 	for (auto& proj : m_projectiles)
 	{
-		proj.update();
+		proj.update(dt);
 	}
 
-	if (!m_projectiles.empty() && m_projectiles.back().isOut(cameraPos.x, cameraPos.x + borderX, cameraPos.y, cameraPos.y + borderY))
+	if (!m_projectiles.empty() && 
+		m_projectiles.back().isOut(
+			cameraPos.x - g_borderAddition, cameraPos.x + borderX + g_borderAddition, 
+			cameraPos.y - g_borderAddition, cameraPos.y + borderY + g_borderAddition))
 	{
 		m_projectiles.pop_front();
 	}

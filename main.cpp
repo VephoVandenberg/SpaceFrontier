@@ -5,12 +5,11 @@ using App = GAME_NAMESPACE::Game;
 /*
 * TODO List
 * Agenda:
-* - 
+* - change a bit place where the projectiles should be dealocated
+* - adapt movement for the enemies
 * Later:
-* - fix the collision between projectiles and enemies
-* - adapt dt in movement for the player
-* - change the dealocation of the projectiles when it is out of the borders
-* - 
+* - think about the states and scenes, and read about them if necessary
+* - read about the AI in games
 */
 
 int main(int argc, char** argv)
