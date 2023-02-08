@@ -13,11 +13,10 @@ namespace GAME_NAMESPACE
 		class Projectile : public GameObj
 		{
 		public:
-			Projectile(glm::vec3 pos, glm::vec3 scale, glm::vec3 color, glm::vec3 velocitiy, glm::vec3 cameraPos, float angle);
+			Projectile(glm::vec3 pos, glm::vec3 scale, glm::vec3 color, glm::vec3 velocitiy, float angle);
 
 			void update(float dt);
 			bool isOut(float left, float right, float bottom, float up) const;
-			void draw(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos, bool hasTexture = true);
 
 			Projectile() = default;
 			~Projectile() = default;

@@ -5,11 +5,11 @@ using App = GAME_NAMESPACE::Game;
 /*
 * TODO List
 * Agenda:
-* - change a bit place where the projectiles should be dealocated
-* - adapt movement for the enemies
+* - rework the rotation
 * Later:
 * - think about the states and scenes, and read about them if necessary
 * - read about the AI in games
+* - adapt movement for the enemies
 */
 
 int main(int argc, char** argv)

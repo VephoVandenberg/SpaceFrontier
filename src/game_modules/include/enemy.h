@@ -18,6 +18,7 @@ namespace GAME_NAMESPACE
 
 			void update(float dt);
 			void shoot();
+			void draw(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos) override;
 
 			void takeDamage() { m_health--; }
 			bool isAlive() const { return m_health > 0; }
@@ -30,6 +31,7 @@ namespace GAME_NAMESPACE
 			Enemy& operator=(const Enemy& enemy) = default;
 
 		private:
+			System::Texture m_texture;
 			glm::vec3 m_velocity = { 0.0f, 0.0f, 0.0f };
 
 			std::deque<Projectile> m_projectiles;

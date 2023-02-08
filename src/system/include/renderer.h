@@ -13,8 +13,6 @@ namespace GAME_NAMESPACE
 			Renderer();
 			~Renderer() = default;
 
-			void draw(float angle, glm::vec3& pos, glm::vec3& scale, Shader& shader);
-			void draw(float angle, glm::vec3& pos, glm::vec3& scale, Shader& shader, Texture& texture);
 			void draw(float angle, glm::vec3& pos, glm::vec3& scale, const glm::vec3& viewDir, Shader& shader);
 			void draw(float angle, glm::vec3& pos, glm::vec3& scale, const glm::vec3& viewDir, Shader& shader, Texture& texture);
 

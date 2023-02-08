@@ -7,26 +7,26 @@ constexpr float g_borderAddition = 200.0f;
 constexpr glm::vec3 g_projSize = { 2.0f, 15.0f, 0.0f };
 
 Player::Player(glm::vec3 pos, glm::vec3 scale, System::Texture& texture)
-	: GameObj(pos, scale, texture)
-	, m_acceleration(400.0f)
+	: GameObj(pos, scale)
+	, m_texture(texture)
+	, m_velocityCoeff(400.0f)
 {}
 
-void Player::update(float dt, float angle, float borderX, float borderY, glm::vec3& cameraPos, MoveDir dir)
+void Player::update(float dt, float da, float borderX, float borderY, glm::vec3& cameraPos, MoveDir dir)
 {
 	// Position update
-	
+	m_angle += da * dt;
 
 	if (dir == MoveDir::Up)
 	{
-		m_angle += angle * 0.5f;
-		m_velocity.x = glm::sin(m_angle) * m_acceleration;
-		m_velocity.y = -glm::cos(m_angle) * m_acceleration;
+		m_velocity.x = glm::sin(m_angle) * m_velocityCoeff;
+		m_velocity.y = -glm::cos(m_angle) * m_velocityCoeff;
 	}
 	else if (dir == MoveDir::Bottom)
 	{
-		m_angle -= angle * 0.5f;
-		m_velocity.x = -glm::sin(m_angle) * m_acceleration;
-		m_velocity.y = glm::cos(m_angle) * m_acceleration;
+		m_angle -= 2.0f * da * dt;
+		m_velocity.x = -glm::sin(m_angle) * m_velocityCoeff;
+		m_velocity.y = glm::cos(m_angle) * m_velocityCoeff;
 	}
 	m_pos += m_velocity * dt;
 	cameraPos += m_velocity * dt;
@@ -47,26 +47,22 @@ void Player::update(float dt, float angle, float borderX, float borderY, glm::ve
 	}
 }
 
-void Player::shoot(const glm::vec3& cameraPos)
+void Player::shoot()
 {
 	glm::vec3 projPos = glm::vec3(m_pos.x + m_scale.x/2.0f, m_pos.y + m_scale.y/3.0f, 0.0f);
-	m_projectiles.push_back(Projectile(projPos, g_projSize, m_color, m_velocity, cameraPos, m_angle));
+	m_projectiles.push_back(Projectile(projPos, g_projSize, m_color, m_velocity, m_angle));
 }
 
-void Player::draw(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos, bool hasTexture)
+void Player::draw(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos)
 {
-	if (hasTexture)
-	{
-		renderer.draw(m_angle, m_pos, m_scale, cameraPos, shader, m_texture);
-	}
-
+	renderer.draw(m_angle, m_pos, m_scale, cameraPos, shader, m_texture);
 }
 
 void Player::drawProjectiles(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos)
 {
 	for (auto& proj : m_projectiles)
 	{
-		proj.draw(shader, renderer, cameraPos, false);
+		proj.draw(shader, renderer, cameraPos);
 	}
 }
 

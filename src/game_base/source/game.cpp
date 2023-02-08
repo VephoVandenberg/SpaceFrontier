@@ -13,7 +13,7 @@ using namespace GAME_NAMESPACE;
 
 constexpr glm::vec3 g_playerShipSize = { 80.0f, 80.0f, 0.0f };
 constexpr glm::vec3 g_baseEnemySize = { 80.0f, 80.0f, 0.0f };
-constexpr float g_dAngle = 0.003f;
+constexpr float g_deltaAngle = 2.0f;
 
 glm::vec3 s_cameraView = { 0.0f, 0.0f, 0.0f };
 
@@ -132,22 +132,21 @@ void Game::render()
 
 	for (auto& enemy : m_enemies)
 	{
-		enemy.draw(System::ResourceManager::getInstance().getShader("base_obj"), * m_renderer);
+		enemy.draw(System::ResourceManager::getInstance().getShader("base_obj"), *m_renderer, s_cameraView);
 	}
 }
 
 void Game::processInput(float dt)
 {
-	float angle = 0.0f;
+	float da = 0.0f;
 	GameModule::MoveDir moveDir = GameModule::MoveDir::None;
-	// NOTE: Rework the rotation
 	if (m_keys[GLFW_KEY_A])
 	{
-		angle -= 0.003f;
+		da = -g_deltaAngle;
 	}
 	if (m_keys[GLFW_KEY_D])
 	{
-		angle += 0.003f;
+		da = g_deltaAngle;
 	}
 	if (m_keys[GLFW_KEY_W])
 	{
@@ -157,12 +156,12 @@ void Game::processInput(float dt)
 	{
 		moveDir = GameModule::MoveDir::Bottom;
 	}
-	m_player->update(dt, angle, m_window->getWidth(), m_window->getHeight(), s_cameraView, moveDir);
+	m_player->update(dt, da, m_window->getWidth(), m_window->getHeight(), s_cameraView, moveDir);
 
 	// NOTE: This solution is not final
 	if (m_keys[GLFW_MOUSE_BUTTON_LEFT])
 	{
-		m_player->shoot(s_cameraView);
+		m_player->shoot();
 		m_keys[GLFW_MOUSE_BUTTON_LEFT] = false;
 	}
 }
