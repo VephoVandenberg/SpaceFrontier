@@ -117,6 +117,12 @@ void Game::run()
 		m_window->clearScreen();
 
 		render();
+
+		for (auto& enemy : m_enemies)
+		{
+			enemy.update(dt);
+		}
+
 		processCollisions();
 
 		m_window->update();

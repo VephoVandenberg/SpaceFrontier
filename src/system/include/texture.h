@@ -14,12 +14,11 @@ namespace GAME_NAMESPACE
 
 			~Texture();
 
-
 			void bind();
 				
 			Texture() = default;
-
 			Texture(const Texture& texture) = default;
+
 			Texture& operator=(const Texture&) = delete;
 
 		private:

@@ -1,4 +1,4 @@
-#include "../include/enemy.h"
+#include "../../include/enemies/enemy.h"
 
 using namespace GAME_NAMESPACE::GameModule;
 
@@ -7,13 +7,12 @@ Enemy::Enemy(glm::vec3 pos, glm::vec3 scale, System::Texture& texture)
 	, m_texture(texture)
 	, m_velocity(0.0f, 0.0f, 0.0f)
 	, m_health(3)
-{
-
-}
+	, m_state(EnemyState::Idle)
+{}
 
 void Enemy::update(float dt)
 {
-
+	m_pos.y += 0.1f;
 }
 
 void Enemy::shoot()

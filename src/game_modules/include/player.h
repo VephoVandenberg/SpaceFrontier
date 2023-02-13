@@ -9,7 +9,7 @@
 
 #include "game_object.h"
 #include "projectile.h"
-#include "Enemy.h"
+#include "enemies/enemy.h"
 
 namespace GAME_NAMESPACE
 {
@@ -35,6 +35,7 @@ namespace GAME_NAMESPACE
 			void draw(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos) override;
 			void checkProjEnemyCoollision(Enemy& enemy);
 			void shoot();
+
 			Player(const Player&) = delete;
 			Player(Player&&) = delete;
 			Player& operator=(const Player&) = delete;
@@ -49,7 +50,6 @@ namespace GAME_NAMESPACE
 			glm::vec3 m_velocity = { 0.0f, 0.0f, 0.0f} ;
 
 			std::list<Projectile> m_projectiles;
-
 		};
 	}
 }

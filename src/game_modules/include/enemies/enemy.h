@@ -2,15 +2,23 @@
 
 #include <deque>
 
-#include "../../system/include/texture.h"
+#include "../../../system/include/texture.h"
 
-#include "game_object.h"
-#include "projectile.h"
+#include "../game_object.h"
+#include "../projectile.h"
 
 namespace GAME_NAMESPACE
 {
 	namespace GameModule
 	{
+		enum class EnemyState
+		{
+			Idle = 1,
+			Patrolling,
+			Atacking,
+			Fleeing
+		};
+
 		class Enemy : public GameObj
 		{
 		public:
@@ -25,10 +33,10 @@ namespace GAME_NAMESPACE
 
 			Enemy() = default;
 			~Enemy() = default;
-			Enemy(Enemy&& enemy) = default;
+			Enemy(Enemy&&) = default;
 			Enemy& operator=(Enemy&&) = default;
-			Enemy(const Enemy& enemy) = delete;
-			Enemy& operator=(const Enemy& enemy) = default;
+			Enemy(const Enemy&) = delete;
+			Enemy& operator=(const Enemy&) = delete;
 
 		private:
 			System::Texture m_texture;
@@ -36,6 +44,8 @@ namespace GAME_NAMESPACE
 
 			std::deque<Projectile> m_projectiles;
 			int m_health = 3;
+
+			EnemyState m_state = EnemyState::Idle;
 		};
 	}
 }

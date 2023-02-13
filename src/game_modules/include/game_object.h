@@ -24,6 +24,7 @@ namespace GAME_NAMESPACE
 			
 			GameObj(GameObj&&) = default;
 			GameObj& operator=(GameObj&&) = default;
+
 		protected:
 			glm::vec3 m_pos = { 0.0f, 0.0f, 0.0f };
 			glm::vec3 m_color = { 1.0f, 1.0f, 1.0f };

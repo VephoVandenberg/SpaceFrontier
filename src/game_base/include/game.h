@@ -8,7 +8,7 @@
 #include "../../system/include/renderer.h"
 
 #include "../../game_modules/include/player.h"
-#include "../../game_modules/include/enemy.h"
+#include "../../game_modules/include/enemies/enemy.h"
 
 namespace GAME_NAMESPACE
 {
