@@ -20,10 +20,11 @@ namespace GAME_NAMESPACE
 
 			Projectile() = default;
 			~Projectile() = default;
-			Projectile(const Projectile&) = default;
 			Projectile(Projectile&&) = default;
-			Projectile& operator=(const Projectile&) = default;
 			Projectile& operator=(Projectile&&) = default;
+
+			Projectile& operator=(const Projectile&) = delete;
+			Projectile(const Projectile&) = delete;
 
 		private:
 			glm::vec3 m_velocity = { 0.0f, 0.0f, 0.0f };

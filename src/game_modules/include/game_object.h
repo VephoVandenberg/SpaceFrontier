@@ -17,6 +17,8 @@ namespace GAME_NAMESPACE
 			virtual void draw(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos);
 			bool checkCollision(const GameObj& obj) const;
 
+			inline glm::vec3 getPos() const { return m_pos; }
+
 			GameObj() = default;
 			virtual ~GameObj() = default;
 			GameObj(const GameObj&) = default;

@@ -111,17 +111,21 @@ void Game::run()
 	float previousFrame = 0.0f;
 	while (m_isRunning)
 	{
-		float currentFrame = glfwGetTime();
+		float currentFrame = static_cast<float>(glfwGetTime());
 		float dt = currentFrame - previousFrame;
 		previousFrame = currentFrame;
 		m_window->clearScreen();
 
 		render();
 
+		/*
 		for (auto& enemy : m_enemies)
 		{
-			enemy.update(dt);
+			enemy.update(dt, dynamic_cast<const GameModule::GameObj&>(*m_player));
 		}
+		*/
+
+		m_enemies[0].update(dt, dynamic_cast<const GameModule::GameObj&>(*m_player));
 
 		processCollisions();
 
@@ -162,7 +166,9 @@ void Game::processInput(float dt)
 	{
 		moveDir = GameModule::MoveDir::Bottom;
 	}
-	m_player->update(dt, da, m_window->getWidth(), m_window->getHeight(), s_cameraView, moveDir);
+	m_player->update(dt, da, 
+		static_cast<float>(m_window->getWidth()), static_cast<float>(m_window->getHeight()),
+		s_cameraView, moveDir);
 
 	// NOTE: This solution is not final
 	if (m_keys[GLFW_MOUSE_BUTTON_LEFT])

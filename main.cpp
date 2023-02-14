@@ -5,6 +5,7 @@ using App = GAME_NAMESPACE::Game;
 /*
 * TODO List
 * Agenda:
+* - primitive ai must be applied
 * Later:
 * - think about the states and scenes, and read about them if necessary
 * - draw textures

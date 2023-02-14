@@ -24,17 +24,18 @@ namespace GAME_NAMESPACE
 		public:
 			Enemy(glm::vec3 pos, glm::vec3 scale, System::Texture& texture);
 
-			void update(float dt);
-			void shoot();
+			virtual void update(float dt, const GameObj& playerObj);
+			virtual void shoot();
 			void draw(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos) override;
 
-			void takeDamage() { m_health--; }
-			bool isAlive() const { return m_health > 0; }
+			inline void takeDamage() { m_health--; }
+			inline bool isAlive() const { return m_health > 0; }
 
 			Enemy() = default;
-			~Enemy() = default;
+			virtual ~Enemy() = default;
 			Enemy(Enemy&&) = default;
 			Enemy& operator=(Enemy&&) = default;
+			
 			Enemy(const Enemy&) = delete;
 			Enemy& operator=(const Enemy&) = delete;
 
@@ -44,6 +45,7 @@ namespace GAME_NAMESPACE
 
 			std::deque<Projectile> m_projectiles;
 			int m_health = 3;
+			float m_timer = 0.0f;
 
 			EnemyState m_state = EnemyState::Idle;
 		};
