@@ -3,7 +3,7 @@
 using namespace GAME_NAMESPACE::GameModule;
 
 constexpr unsigned int g_fullMag = 64;
-constexpr float g_borderAddition = 200.0f;
+constexpr float g_borderAddition = 400.0f;
 constexpr glm::vec3 g_projSize = { 2.0f, 15.0f, 0.0f };
 
 Player::Player(glm::vec3 pos, glm::vec3 scale, System::Texture& texture)

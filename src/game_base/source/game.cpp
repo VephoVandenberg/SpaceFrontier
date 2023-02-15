@@ -109,7 +109,7 @@ void Game::onEvent(System::Event& event)
 void Game::run()
 {
 	float previousFrame = 0.0f;
-	while (m_isRunning)
+	while (m_isRunning && m_player->isAlive())
 	{
 		float currentFrame = static_cast<float>(glfwGetTime());
 		float dt = currentFrame - previousFrame;
@@ -118,15 +118,12 @@ void Game::run()
 
 		render();
 
-		/*
 		for (auto& enemy : m_enemies)
 		{
-			enemy.update(dt, dynamic_cast<const GameModule::GameObj&>(*m_player));
+			enemy.update(dt, static_cast<float>(m_window->getWidth()), static_cast<float>(m_window->getHeight()),
+				s_cameraView, dynamic_cast<const GameModule::GameObj&>(*m_player));
 		}
-		*/
-
-		m_enemies[0].update(dt, dynamic_cast<const GameModule::GameObj&>(*m_player));
-
+	
 		processCollisions();
 
 		m_window->update();
@@ -143,6 +140,7 @@ void Game::render()
 	for (auto& enemy : m_enemies)
 	{
 		enemy.draw(System::ResourceManager::getInstance().getShader("base_obj"), *m_renderer, s_cameraView);
+		enemy.drawProjectiles(System::ResourceManager::getInstance().getShader("base_proj"), *m_renderer, s_cameraView);
 	}
 }
 
@@ -182,7 +180,10 @@ void Game::processCollisions()
 {
 	for (auto& enemy : m_enemies)
 	{
+		int damage = enemy.checkProjPlayerCoollision(dynamic_cast<const GameModule::GameObj&>(*m_player));
+
 		m_player->checkProjEnemyCoollision(enemy);
+		m_player->takeDamage(damage);
 	}
 
 	m_enemies.erase(

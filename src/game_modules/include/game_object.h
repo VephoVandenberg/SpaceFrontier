@@ -18,6 +18,7 @@ namespace GAME_NAMESPACE
 			bool checkCollision(const GameObj& obj) const;
 
 			inline glm::vec3 getPos() const { return m_pos; }
+			inline glm::vec3 getScale() const { return m_scale; }
 
 			GameObj() = default;
 			virtual ~GameObj() = default;

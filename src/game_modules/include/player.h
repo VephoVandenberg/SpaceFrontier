@@ -36,6 +36,9 @@ namespace GAME_NAMESPACE
 			void checkProjEnemyCoollision(Enemy& enemy);
 			void shoot();
 
+			inline void takeDamage(int damage) { m_health -= damage; }
+			inline bool isAlive() const { return m_health > 0.0f; }
+
 			Player(const Player&) = delete;
 			Player(Player&&) = delete;
 			Player& operator=(const Player&) = delete;
@@ -44,7 +47,7 @@ namespace GAME_NAMESPACE
 		private:
 			System::Texture m_texture;
 
-			float m_health = 100.0f;
+			float m_health = 10.0f;
 			float m_velocityCoeff = 1.0f;
 
 			glm::vec3 m_velocity = { 0.0f, 0.0f, 0.0f} ;
