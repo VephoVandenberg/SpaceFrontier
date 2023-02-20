@@ -23,6 +23,7 @@ namespace GAME_NAMESPACE
 
 		private:
 			void init();
+			void setUniforms(float angle, glm::vec3& pos, glm::vec3& scale, const glm::vec3& viewDir, Shader& shader) const;
 
 			unsigned int m_quadVAO;
 		};

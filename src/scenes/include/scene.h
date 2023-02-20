@@ -2,15 +2,23 @@
 
 namespace GAME_NAMESPACE
 {
-	namespace Scene
+	namespace GameState
 	{
-		class Scene
+		class State
 		{
 		public:
-			Scene() = default;
-			~Scene() = default;
 
-			virtual void play() = 0;
+			virtual void update() = 0;
+			virtual State& nextState() const = 0;
+
+			State() = default;
+			virtual ~State() = default;
+			State(State&&) = default;
+			State& operator=(State&&) = default;
+
+			State(const State&) = delete;
+			State& operator=(const State&) = delete;
+
 		private:
 		};
 	}

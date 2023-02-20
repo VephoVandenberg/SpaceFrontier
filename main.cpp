@@ -6,8 +6,10 @@ using App = GAME_NAMESPACE::Game;
 * TODO List
 * Agenda:
 * Later:
-* - change the degrees in renderer
-* - think about the states and scenes, and read about them if necessary
+* - a good random number genreator is needed
+* - menu scene has to be made
+* - stationary objects like asteroids must be added, as well as dynamic meteors
+* - how the map should be drawn, think about it?
 * - draw textures
 */
 

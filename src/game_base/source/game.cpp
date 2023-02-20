@@ -38,9 +38,9 @@ void Game::init()
 		.setShader("base_proj", "shaders/base_proj_shader.vert", "shaders/base_proj_shader.frag");
 
 	System::ResourceManager::getInstance()
-		.setTexture("player", "textures/player_ship.jpg");
+		.setTexture("player", "textures/player_ship.png");
 	System::ResourceManager::getInstance()
-		.setTexture("enemy_base", "textures/enemy_ship.jpg");
+		.setTexture("enemy_base", "textures/enemy_ship.png");
 
 
 	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(m_window->getWidth()),

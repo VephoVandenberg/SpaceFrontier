@@ -5,7 +5,7 @@
 using namespace GAME_NAMESPACE::GameModule;
 
 constexpr float g_enemyVelocityCoeff = 100.0f;
-constexpr float g_attackRange = 600.0f;
+constexpr float g_attackRange = 200.0f;
 constexpr float g_deltaAngle = 1.0f;
 constexpr float g_PI = 3.14159265359f;
 constexpr float g_borderAddition = 400.0f;
@@ -18,7 +18,7 @@ Enemy::Enemy(glm::vec3 pos, glm::vec3 scale, System::Texture& texture)
 	, m_timer(0.0f)
 	, m_state(EnemyState::Idle)
 {
-	m_velocity.x = glm::sin(m_angle) * g_enemyVelocityCoeff;
+	m_velocity.x =  glm::sin(m_angle) * g_enemyVelocityCoeff;
 	m_velocity.y = -glm::cos(m_angle) * g_enemyVelocityCoeff;
 }
 
@@ -31,83 +31,20 @@ void Enemy::update(float dt, float borderX, float borderY, glm::vec3& cameraPos,
 	{
 
 	case EnemyState::Idle:
-		if (glm::length(playerObj.getPos() - m_pos) <= g_attackRange)
-		{
-			m_state = EnemyState::Fighting;
-			m_shootingTimeGap = static_cast<float>(std::rand() % 3 + 1);
-			m_timer = 0.0f;
-			break;
-		}
-
-		if (m_timer >= 3.0f)
-		{
-			m_state = EnemyState::Patrolling;
-			m_timer = 0.0f;
-
-			m_velocity.x = glm::sin(m_angle) * g_enemyVelocityCoeff;
-			m_velocity.y = (m_velocity.y < 0.0f) ? glm::cos(m_angle) * g_enemyVelocityCoeff : -glm::cos(m_angle) * g_enemyVelocityCoeff;
-		}
+		idle(playerObj);
 		break;
 
 	case EnemyState::Patrolling:
-		if (glm::length(playerObj.getPos() - m_pos) <= g_attackRange)
-		{
-			m_state = EnemyState::Fighting;
-			m_shootingTimeGap = static_cast<float>(std::rand() % 2, 1);
-			m_timer = 0.0f;
-			break;
-		}
-
-		if (m_timer >= 3.0f)
-		{
-			m_state = EnemyState::Idle;
-			m_timer = 0.0f;
-		}
-
-		m_pos += m_velocity * dt;
+		patroll(dt, playerObj);
 		break;
 
 	case EnemyState::Fighting:
-	{
-		glm::vec2 normVel = glm::normalize(m_velocity);
-		glm::vec2 normEnemyToPlayer = glm::normalize(playerObj.getPos() + playerObj.getScale()/4.0f - m_pos);
-		float dot = glm::dot(normVel, normEnemyToPlayer);
-
-		if (dot < 0.995f)
-		{
-			float angle = glm::orientedAngle(normVel, normEnemyToPlayer) * (180.0f / g_PI);
-			if (angle < 0.0f)
-			{
-				m_angle -= g_deltaAngle * dt;
-			}
-			else
-			{
-				m_angle += g_deltaAngle * dt;
-			}
-			m_velocity.x = glm::sin(m_angle) * g_enemyVelocityCoeff;
-			m_velocity.y = -glm::cos(m_angle) * g_enemyVelocityCoeff;
-			m_timer = 0.0f;
-		}
-		else
-		{
-			if (m_timer >= m_shootingTimeGap)
-			{
-				shoot();
-				m_timer = 0.0f;
-			}
-		}
-
-		if (glm::length(playerObj.getPos() - m_pos) >= g_attackRange + 200)
-		{
-			m_state = EnemyState::Idle;
-			break;
-		}
-
-	}break;
-
-	case EnemyState::Fleeing:
+		fight(dt, playerObj);
 		break;
 
+	case EnemyState::Fleeing:
+		flee();
+		break;
 	}
 
 	// Projectiles update
@@ -123,6 +60,84 @@ void Enemy::update(float dt, float borderX, float borderY, glm::vec3& cameraPos,
 	{
 		m_projectiles.pop_front();
 	}
+}
+
+void Enemy::idle(const GameObj& playerObj)
+{
+	if (m_timer >= 3.0f)
+	{
+		m_state = EnemyState::Patrolling;
+		m_timer = 0.0f;
+
+		m_velocity *= -1.0f;
+	}
+
+	if (glm::length(playerObj.getPos() - m_pos) <= g_attackRange)
+	{
+		m_state = EnemyState::Fighting;
+		m_shootingTimeGap = static_cast<float>(std::rand() % 3 + 1);
+		m_timer = 0.0f;
+	}
+}
+
+void Enemy::patroll(float dt, const GameObj& playerObj)
+{
+	if (m_timer >= 3.0f)
+	{
+		m_state = EnemyState::Idle;
+		m_timer = 0.0f;
+	}
+
+	if (glm::length(playerObj.getPos() - m_pos) <= g_attackRange)
+	{
+		m_state = EnemyState::Fighting;
+		m_shootingTimeGap = static_cast<float>(std::rand() % 2, 1);
+		m_timer = 0.0f;
+	}
+
+	m_pos += m_velocity * dt;
+}
+
+void Enemy::fight(float dt, const GameObj& playerObj)
+{
+	glm::vec2 normVel = glm::normalize(m_velocity);
+	glm::vec2 normEnemyToPlayer = glm::normalize(playerObj.getPos() + playerObj.getScale() / 4.0f - m_pos);
+	float dot = glm::dot(normVel, normEnemyToPlayer);
+
+	if (dot < 0.995f)
+	{
+		float angle = glm::orientedAngle(normVel, normEnemyToPlayer) * (180.0f / g_PI);
+		if (angle < 0.0f)
+		{
+			m_angle -= g_deltaAngle * dt;
+		}
+		else
+		{
+			m_angle += g_deltaAngle * dt;
+		}
+		m_velocity.x = glm::sin(m_angle) * g_enemyVelocityCoeff;
+		m_velocity.y = -glm::cos(m_angle) * g_enemyVelocityCoeff;
+		m_timer = 0.0f;
+	}
+	else
+	{
+		if (m_timer >= m_shootingTimeGap)
+		{
+			shoot();
+			m_timer = 0.0f;
+		}
+	}
+
+	if (glm::length(playerObj.getPos() - m_pos) >= g_attackRange + 200)
+	{
+		m_state = EnemyState::Idle;
+	}
+}
+
+
+void Enemy::flee()
+{
+
 }
 
 void Enemy::shoot()

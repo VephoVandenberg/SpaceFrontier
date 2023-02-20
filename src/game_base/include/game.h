@@ -7,6 +7,8 @@
 #include "../../system/include/window.h"
 #include "../../system/include/renderer.h"
 
+#include "../../scenes/include/scene.h"
+
 #include "../../game_modules/include/player.h"
 #include "../../game_modules/include/enemies/enemy.h"
 

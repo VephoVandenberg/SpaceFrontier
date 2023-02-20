@@ -41,6 +41,12 @@ namespace GAME_NAMESPACE
 			Enemy(const Enemy&) = delete;
 			Enemy& operator=(const Enemy&) = delete;
 
+		protected:
+			void idle(const GameObj& playerObj);
+			void patroll(float dt, const GameObj& playerObj);
+			void fight(float dt, const GameObj& playerObj);
+			void flee();
+
 		private:
 			System::Texture m_texture;
 			glm::vec3 m_velocity = { 0.0f, 0.0f, 0.0f };
