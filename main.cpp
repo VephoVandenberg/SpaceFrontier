@@ -5,6 +5,7 @@ using App = GAME_NAMESPACE::Game;
 /*
 * TODO List
 * Agenda:
+* - some simple states have to be added
 * Later:
 * - a good random number genreator is needed
 * - menu scene has to be made

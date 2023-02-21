@@ -29,3 +29,4 @@ bool Projectile::isOut(float left, float right, float bottom, float up) const
 	}
 	return false;
 }
+ 

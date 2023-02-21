@@ -24,7 +24,7 @@ namespace GAME_NAMESPACE
 		public:
 			Enemy(glm::vec3 pos, glm::vec3 scale, System::Texture& texture);
 
-			virtual void update(float dt, float borderX, float borderY, glm::vec3& cameraPos, const GameObj& playerObj);
+			virtual void update(float dt, float borderX, float borderY, const glm::vec3& cameraPos, const GameObj& playerObj);
 			virtual void shoot();
 			void draw(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos) override;
 			void drawProjectiles(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos);

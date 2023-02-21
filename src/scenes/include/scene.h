@@ -2,24 +2,26 @@
 
 namespace GAME_NAMESPACE
 {
-	namespace GameState
+	namespace GameScene
 	{
-		class State
+		class Scene
 		{
 		public:
+			virtual void update(float dt, const glm::vec3& cameraView) = 0;
+			virtual Scene* nextState() = 0;
 
-			virtual void update() = 0;
-			virtual State& nextState() const = 0;
+			Scene() = default;
+			virtual ~Scene() = default;
+			Scene(Scene&&) = default;
+			Scene& operator=(Scene&&) = default;
 
-			State() = default;
-			virtual ~State() = default;
-			State(State&&) = default;
-			State& operator=(State&&) = default;
+			Scene(const Scene&) = delete;
+			Scene& operator=(const Scene&) = delete;
 
-			State(const State&) = delete;
-			State& operator=(const State&) = delete;
-
-		private:
+		protected:
+			virtual void onAttach() = 0;
+			virtual void onDetatch() = 0;
+			virtual void render(const glm::vec3& cameraView) = 0;
 		};
 	}
 }

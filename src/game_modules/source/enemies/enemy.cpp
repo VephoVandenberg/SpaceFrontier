@@ -22,7 +22,7 @@ Enemy::Enemy(glm::vec3 pos, glm::vec3 scale, System::Texture& texture)
 	m_velocity.y = -glm::cos(m_angle) * g_enemyVelocityCoeff;
 }
 
-void Enemy::update(float dt, float borderX, float borderY, glm::vec3& cameraPos, const GameObj& playerObj)
+void Enemy::update(float dt, float borderX, float borderY, const glm::vec3& cameraPos, const GameObj& playerObj)
 {
 	m_timer += dt;
 

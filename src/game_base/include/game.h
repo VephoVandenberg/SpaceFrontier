@@ -29,14 +29,13 @@ namespace GAME_NAMESPACE
 
 	private:
 		void init();
-		void initEnemies();
 		void onEvent(System::Event& event);
 		void processInput(float dt);
-		void processCollisions();
-		void render();
 
 		std::unique_ptr<System::Window> m_window = nullptr;
 		std::unique_ptr<System::Renderer> m_renderer = nullptr;
+
+		std::unique_ptr<GameScene::Scene> m_scene = nullptr;
 
 		std::unique_ptr<GameModule::Player> m_player = nullptr;
 		
