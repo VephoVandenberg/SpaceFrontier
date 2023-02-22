@@ -50,7 +50,8 @@ void Player::update(float dt, float da, float borderX, float borderY, glm::vec3&
 void Player::shoot()
 {
 	glm::vec3 projPos = glm::vec3(m_pos.x + m_scale.x/2.0f, m_pos.y + m_scale.y/3.0f, 0.0f);
-	m_projectiles.push_back(Projectile(projPos, g_projSize, m_color, m_velocity, m_angle));
+	glm::vec3 projColor = glm::vec3(1.0f, 0.0f, 0.0f);
+	m_projectiles.push_back(Projectile(projPos, g_projSize, projColor, m_velocity, m_angle));
 }
 
 void Player::draw(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos)

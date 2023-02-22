@@ -43,7 +43,7 @@ void Window::init()
 	glfwSetWindowCloseCallback(
 		m_window,
 		[](GLFWwindow* window) {
-			auto *data = reinterpret_cast<CallbackData*>(glfwGetWindowUserPointer(window));
+			auto* data = reinterpret_cast<CallbackData*>(glfwGetWindowUserPointer(window));
 			WindowCloseEvent event;
 			data->func(event);
 		});
@@ -57,8 +57,8 @@ void Window::init()
 	glfwSetKeyCallback(
 		m_window,
 		[](GLFWwindow* window, int key, int scancode, int action, int mods) {
-			auto *data = reinterpret_cast<CallbackData*>(glfwGetWindowUserPointer(window));
-			
+			auto* data = reinterpret_cast<CallbackData*>(glfwGetWindowUserPointer(window));
+
 			switch (action)
 			{
 			case GLFW_PRESS:
@@ -98,7 +98,7 @@ void Window::init()
 				event.key = button;
 				data->func(event);
 			}break;
-			
+
 			case GLFW_RELEASE:
 			{
 				KeyReleaseEvent event;
@@ -106,6 +106,18 @@ void Window::init()
 				data->func(event);
 			}break;
 			}
+		}
+	);
+
+	glfwSetCursorPosCallback(
+		m_window,
+		[](GLFWwindow* window, double xpos, double ypos) {
+			auto* data = reinterpret_cast<CallbackData*>(glfwGetWindowUserPointer(window));
+
+			MouseMoveEvent event;
+			event.position = { xpos, ypos, 0.0f };
+
+			data->func(event);
 		}
 	);
 }

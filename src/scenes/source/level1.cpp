@@ -1,9 +1,12 @@
+#include <glfw3.h>
+
 #include "../../system/include/resource_manager.h"
 #include "../include/level1.h"
 
 using namespace GAME_NAMESPACE::GameScene;
 
 constexpr glm::vec3 g_baseEnemySize = { 80.0f, 80.0f, 0.0f };
+constexpr float g_deltaAngle = 2.0f;
 
 Level1::Level1(float width, float height, GameModule::Player& player, System::Renderer& renderer)
 	: m_width(width)
@@ -27,6 +30,7 @@ void Level1::onAttach()
 		m_enemies.emplace_back(GameModule::Enemy(pos, g_baseEnemySize,
 			System::ResourceManager::getInstance().getTexture("enemy_base")));
 	}
+	m_nextScene = Scenes::Level1Scene;
 }
 
 void Level1::onDetatch()
@@ -78,7 +82,32 @@ void Level1::processCollisions()
 		m_enemies.end());
 }
 
-Scene* Level1::nextState()
+void Level1::processInput(float dt, glm::vec3& cameraView, const glm::vec3& cursorPos, bool* const keys)
 {
-	return nullptr;
+	float da = 0.0f;
+	GameModule::MoveDir moveDir = GameModule::MoveDir::None;
+	if (keys[GLFW_KEY_A])
+	{
+		da = -g_deltaAngle;
+	}
+	if (keys[GLFW_KEY_D])
+	{
+		da = g_deltaAngle;
+	}
+	if (keys[GLFW_KEY_W])
+	{
+		moveDir = GameModule::MoveDir::Up;
+	}
+	if (keys[GLFW_KEY_S])
+	{
+		moveDir = GameModule::MoveDir::Bottom;
+	}
+	m_player.update(dt, da, m_width, m_height, cameraView, moveDir);
+
+	// NOTE: This solution is not final
+	if (keys[GLFW_MOUSE_BUTTON_LEFT])
+	{
+		m_player.shoot();
+		keys[GLFW_MOUSE_BUTTON_LEFT] = false;
+	}
 }

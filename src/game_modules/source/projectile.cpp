@@ -5,7 +5,7 @@ using namespace GAME_NAMESPACE::GameModule;
 constexpr float g_projVelocityCoeff = 750.0f;
 
 Projectile::Projectile(glm::vec3 pos, glm::vec3 scale, glm::vec3 color, glm::vec3 shipVelocity, float angle)
-	: GameObj(pos, scale, angle)
+	: GameObj(pos, scale, color, angle)
 	, m_additionalVelocity(shipVelocity / 12.0f)
 	, m_velocity(0.0f, 0.0f, 0.0f)
 {

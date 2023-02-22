@@ -2,6 +2,8 @@
 
 #include "../../system/include/renderer.h"
 
+#include "UI/Button.h"
+
 #include "scene.h"
 
 namespace GAME_NAMESPACE
@@ -15,7 +17,10 @@ namespace GAME_NAMESPACE
 			~Menu();
 
 			void update(float dt, const glm::vec3& cameraView) override;
-			Scene* nextState() override;
+			void processInput(float dt, glm::vec3& cameraView, const glm::vec3& cursorPos, bool* const keys) override;
+			
+			inline Scenes nextScene() override { return m_nextScene; }
+			inline Scenes getScene() override { return Scenes::MenuScene; }
 
 			Menu(Menu&&) = default;
 			Menu& operator=(Menu&&) = default;
@@ -34,6 +39,10 @@ namespace GAME_NAMESPACE
 			float m_height;
 
 			System::Renderer& m_renderer;
+
+			GameModule::GameObj m_panel;
+			GameScene::Button m_start;
+			GameScene::Button m_exit;
 		};
 	}
 }

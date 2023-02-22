@@ -5,10 +5,10 @@ using App = GAME_NAMESPACE::Game;
 /*
 * TODO List
 * Agenda:
-* - some simple states have to be added
-* Later:
-* - a good random number genreator is needed
 * - menu scene has to be made
+* - switching between menu and level1
+* - a good random number genreator is needed, or at least read about it
+* Later:
 * - stationary objects like asteroids must be added, as well as dynamic meteors
 * - how the map should be drawn, think about it?
 * - draw textures

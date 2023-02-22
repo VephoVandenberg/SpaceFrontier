@@ -19,8 +19,11 @@ namespace GAME_NAMESPACE
 			Level1(float width, float height, GameModule::Player& player, System::Renderer& renderer);
 			~Level1();
 
+			void processInput(float dt, glm::vec3& cameraView, const glm::vec3& cursorPos,  bool* const keys) override;
 			void update(float dt, const glm::vec3& cameraView) override;
-			Scene* nextState() override;
+			
+			inline Scenes nextScene() override { return m_nextScene; }
+			inline Scenes getScene() override { return Scenes::Level1Scene; }
 
 			Level1(Level1&&) = default;
 			Level1& operator=(Level1&&) = default;

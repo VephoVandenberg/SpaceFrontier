@@ -1,5 +1,6 @@
 #pragma once
 
+#include <glm/glm.hpp>
 
 namespace GAME_NAMESPACE
 {
@@ -10,7 +11,8 @@ namespace GAME_NAMESPACE
 			CLOSE = 0,
 			KEY_PRESS,
 			KEY_RELEASE,
-			KEY_REPEAT
+			KEY_REPEAT,
+			MOUSE_MOVE
 		};
 
 		struct Event
@@ -43,6 +45,12 @@ namespace GAME_NAMESPACE
 
 			inline EventType getType() const override { return EventType::KEY_REPEAT; }
 		};
-	}
 
+		struct MouseMoveEvent : public Event
+		{
+			glm::vec3 position;
+
+			inline EventType getType() const override { return EventType::MOUSE_MOVE; }
+		};
+	}
 }

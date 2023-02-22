@@ -143,7 +143,8 @@ void Enemy::flee()
 void Enemy::shoot()
 {
 	glm::vec3 projPos = glm::vec3(m_pos.x + m_scale.x / 2.0f, m_pos.y + m_scale.y / 3.0f, 0.0f);
-	m_projectiles.push_back(Projectile(projPos, g_projSize, m_color, m_velocity, m_angle));
+	glm::vec3 color = glm::vec3(0.0f, 1.0f, 0.0f);
+	m_projectiles.push_back(Projectile(projPos, g_projSize, color, m_velocity, m_angle));
 }
 
 void Enemy::draw(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos)

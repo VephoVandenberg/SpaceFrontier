@@ -29,14 +29,12 @@ namespace GAME_NAMESPACE
 
 	private:
 		void init();
+		void switchScene();
 		void onEvent(System::Event& event);
-		void processInput(float dt);
 
 		std::unique_ptr<System::Window> m_window = nullptr;
 		std::unique_ptr<System::Renderer> m_renderer = nullptr;
-
 		std::unique_ptr<GameScene::Scene> m_scene = nullptr;
-
 		std::unique_ptr<GameModule::Player> m_player = nullptr;
 		
 		std::vector<GameModule::Enemy> m_enemies;

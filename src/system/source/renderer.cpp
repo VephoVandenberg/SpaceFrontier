@@ -48,23 +48,24 @@ void Renderer::init()
 	glBindVertexArray(0);
 }
 
-void Renderer::draw(float angle, glm::vec3& pos, glm::vec3& scale, const glm::vec3& viewDir, Shader& shader)
+void Renderer::draw(float angle, glm::vec3& pos, glm::vec3& scale, glm::vec3& color, const glm::vec3& viewDir, Shader& shader)
 {
-	setUniforms(angle, pos, scale, viewDir, shader);
+	setBaseUniforms(angle, pos, scale, viewDir, shader);
+	shader.setVector3f("u_Color", color);
 	glBindVertexArray(m_quadVAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
 void Renderer::draw(float angle, glm::vec3& pos, glm::vec3& scale, const glm::vec3& viewDir, Shader& shader, Texture& texture)
 {
-	setUniforms(angle, pos, scale, viewDir, shader);
+	setBaseUniforms(angle, pos, scale, viewDir, shader);
 	shader.setInt("uTexture", 0);
 	texture.bind();
 	glBindVertexArray(m_quadVAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
-void Renderer::setUniforms(float angle, glm::vec3& pos, glm::vec3& scale, const glm::vec3& viewDir, Shader& shader) const
+void Renderer::setBaseUniforms(float angle, glm::vec3& pos, glm::vec3& scale, const glm::vec3& viewDir, Shader& shader) const
 {
 	shader.use();
 

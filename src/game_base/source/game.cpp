@@ -6,6 +6,7 @@
 
 #include "../../system/include/resource_manager.h"
 
+#include "../../scenes/include/menu_scene.h"
 #include "../../scenes/include/level1.h"
 
 #include "../include/game.h"
@@ -15,9 +16,9 @@ using namespace GAME_NAMESPACE;
 
 constexpr glm::vec3 g_playerShipSize = { 80.0f, 80.0f, 0.0f };
 constexpr glm::vec3 g_baseEnemySize = { 80.0f, 80.0f, 0.0f };
-constexpr float g_deltaAngle = 2.0f;
 
 glm::vec3 s_cameraView = { 0.0f, 0.0f, 0.0f };
+glm::vec3 s_cursorPos = { 0.0f, 0.0f, 0.0f };
 
 
 Game::Game()
@@ -54,8 +55,8 @@ void Game::init()
 	m_player = std::unique_ptr<GameModule::Player>(new GameModule::Player(playerPos, g_playerShipSize,
 		System::ResourceManager::getInstance().getTexture("player")));
 
-	m_scene = std::unique_ptr<GameScene::Level1>(new GameScene::Level1(
-		static_cast<float>(m_window->getWidth()), static_cast<float>(m_window->getHeight()), *m_player, *m_renderer));
+	m_scene = std::unique_ptr<GameScene::Menu>(new GameScene::Menu(
+		static_cast<float>(m_window->getWidth()), static_cast<float>(m_window->getHeight()), *m_renderer));
 
 	System::ResourceManager::getInstance().getShader("base_obj").use();
 	System::ResourceManager::getInstance().getShader("base_obj").setMatrix("uProjection", projection);
@@ -77,6 +78,11 @@ void Game::onEvent(System::Event& event)
 		m_isRunning = false;
 	}break;
 
+	case System::EventType::MOUSE_MOVE:
+	{
+		s_cursorPos = dynamic_cast<System::MouseMoveEvent&>(event).position;
+	}break;
+	
 	case System::EventType::KEY_PRESS:
 	{
 		auto& key = dynamic_cast<System::KeyPressEvent&>(event).key;
@@ -110,41 +116,32 @@ void Game::run()
 		previousFrame = currentFrame;
 
 		m_window->clearScreen();
-		m_scene->update(dt, s_cameraView);
-		m_window->update();
 
-		processInput(dt);
+		if (m_scene->nextScene() != m_scene->getScene())
+		{
+			switchScene();
+		}
+		m_scene->processInput(dt, s_cameraView, s_cursorPos, m_keys);
+		m_scene->update(dt, s_cameraView);
+
+		m_window->update();
 	}
 }
 
-void Game::processInput(float dt)
+void Game::switchScene()
 {
-	float da = 0.0f;
-	GameModule::MoveDir moveDir = GameModule::MoveDir::None;
-	if (m_keys[GLFW_KEY_A])
+	switch (m_scene->nextScene())
 	{
-		da = -g_deltaAngle;
-	}
-	if (m_keys[GLFW_KEY_D])
-	{
-		da = g_deltaAngle;
-	}
-	if (m_keys[GLFW_KEY_W])
-	{
-		moveDir = GameModule::MoveDir::Up;
-	}
-	if (m_keys[GLFW_KEY_S])
-	{
-		moveDir = GameModule::MoveDir::Bottom;
-	}
-	m_player->update(dt, da, 
-		static_cast<float>(m_window->getWidth()), static_cast<float>(m_window->getHeight()),
-		s_cameraView, moveDir);
+	case GameScene::Scenes::Level1Scene:
+		m_scene = std::unique_ptr<GameScene::Level1>(new GameScene::Level1(
+			static_cast<float>(m_window->getWidth()), static_cast<float>(m_window->getHeight()), *m_player, *m_renderer));
+		break;
 
-	// NOTE: This solution is not final
-	if (m_keys[GLFW_MOUSE_BUTTON_LEFT])
-	{
-		m_player->shoot();
-		m_keys[GLFW_MOUSE_BUTTON_LEFT] = false;
+	case GameScene::Scenes::MenuScene:
+		break;
+
+	case GameScene::Scenes::ShutDown:
+		m_isRunning = false;
+		break;
 	}
 }
