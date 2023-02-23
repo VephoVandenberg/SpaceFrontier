@@ -63,6 +63,11 @@ void Level1::render(const glm::vec3& cameraView)
 	{
 		enemy.draw(System::ResourceManager::getInstance().getShader("base_obj"), m_renderer, cameraView);
 		enemy.drawProjectiles(System::ResourceManager::getInstance().getShader("base_proj"), m_renderer, cameraView);
+
+		if (!m_player.isAlive())
+		{
+			m_nextScene = Scenes::MenuScene;
+		}
 	}
 }
 

@@ -17,8 +17,8 @@ using namespace GAME_NAMESPACE;
 constexpr glm::vec3 g_playerShipSize = { 80.0f, 80.0f, 0.0f };
 constexpr glm::vec3 g_baseEnemySize = { 80.0f, 80.0f, 0.0f };
 
-glm::vec3 s_cameraView = { 0.0f, 0.0f, 0.0f };
-glm::vec3 s_cursorPos = { 0.0f, 0.0f, 0.0f };
+glm::vec3 s_cameraView = glm::vec3(0.0f);
+glm::vec3 s_cursorPos = glm::vec3(0.0f);
 
 
 Game::Game()
@@ -39,8 +39,10 @@ void Game::init()
 		.setShader("base_obj", "shaders/base_obj_shader.vert", "shaders/base_obj_shader.frag");
 	System::ResourceManager::getInstance()
 		.setShader("base_proj", "shaders/base_proj_shader.vert", "shaders/base_proj_shader.frag");
-
 	System::ResourceManager::getInstance()
+		.setShader("base_button", "shaders/button_shader.vert", "shaders/button_shader.frag");
+
+		System::ResourceManager::getInstance()
 		.setTexture("player", "textures/player_ship.png");
 	System::ResourceManager::getInstance()
 		.setTexture("enemy_base", "textures/enemy_ship.png");
@@ -67,7 +69,12 @@ void Game::init()
 	System::ResourceManager::getInstance().getShader("base_proj").setMatrix("uProjection", projection);
 	System::ResourceManager::getInstance().getShader("base_proj").setMatrix("uView", view);
 	System::ResourceManager::getInstance().getShader("base_proj").unbind();
-} 
+
+	System::ResourceManager::getInstance().getShader("base_button").use();
+	System::ResourceManager::getInstance().getShader("base_button").setMatrix("uProjection", projection);
+	System::ResourceManager::getInstance().getShader("base_button").setMatrix("uView", view);
+	System::ResourceManager::getInstance().getShader("base_button").unbind();
+}
 
 void Game::onEvent(System::Event& event)
 {
@@ -82,7 +89,7 @@ void Game::onEvent(System::Event& event)
 	{
 		s_cursorPos = dynamic_cast<System::MouseMoveEvent&>(event).position;
 	}break;
-	
+
 	case System::EventType::KEY_PRESS:
 	{
 		auto& key = dynamic_cast<System::KeyPressEvent&>(event).key;
@@ -109,7 +116,7 @@ void Game::onEvent(System::Event& event)
 void Game::run()
 {
 	float previousFrame = 0.0f;
-	while (m_isRunning && m_player->isAlive())
+	while (m_isRunning)
 	{
 		float currentFrame = static_cast<float>(glfwGetTime());
 		float dt = currentFrame - previousFrame;
@@ -130,6 +137,7 @@ void Game::run()
 
 void Game::switchScene()
 {
+	// Next scene must be decided
 	switch (m_scene->nextScene())
 	{
 	case GameScene::Scenes::Level1Scene:
@@ -138,6 +146,9 @@ void Game::switchScene()
 		break;
 
 	case GameScene::Scenes::MenuScene:
+		s_cameraView = glm::vec3(0.0f);
+		m_scene = std::unique_ptr<GameScene::Menu>(new GameScene::Menu(
+			static_cast<float>(m_window->getWidth()), static_cast<float>(m_window->getHeight()), *m_renderer));
 		break;
 
 	case GameScene::Scenes::ShutDown:

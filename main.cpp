@@ -5,9 +5,8 @@ using App = GAME_NAMESPACE::Game;
 /*
 * TODO List
 * Agenda:
-* - menu scene has to be made
-* - switching between menu and level1
-* - a good random number genreator is needed, or at least read about it
+* - add shaders of the buttons, and activate them
+* - learn about rng
 * Later:
 * - stationary objects like asteroids must be added, as well as dynamic meteors
 * - how the map should be drawn, think about it?
