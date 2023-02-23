@@ -5,7 +5,6 @@ using App = GAME_NAMESPACE::Game;
 /*
 * TODO List
 * Agenda:
-* - add shaders of the buttons, and activate them
 * - learn about rng
 * Later:
 * - stationary objects like asteroids must be added, as well as dynamic meteors

@@ -34,6 +34,7 @@ namespace GAME_NAMESPACE
 			void drawProjectiles(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos);
 			void draw(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos) override;
 			void checkProjEnemyCoollision(Enemy& enemy);
+			void reset(glm::vec3 pos);
 			void shoot();
 
 			inline void takeDamage(int damage) { m_health -= damage; }

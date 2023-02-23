@@ -24,6 +24,7 @@ Level1::~Level1()
 
 void Level1::onAttach()
 {
+	m_player.reset(glm::vec3(m_width/2.0f, m_height/2.0f, 0.0f));
 	for (int i = 0; i < 10; i++)
 	{
 		glm::vec3 pos(200.0f + (i + 1) * (g_baseEnemySize.x + 30.0f), 200.0f, 0.0f);

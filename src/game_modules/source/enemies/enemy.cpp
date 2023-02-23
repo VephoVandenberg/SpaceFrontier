@@ -5,8 +5,8 @@
 using namespace GAME_NAMESPACE::GameModule;
 
 constexpr float g_enemyVelocityCoeff = 100.0f;
-constexpr float g_attackRange = 200.0f;
-constexpr float g_deltaAngle = 1.0f;
+constexpr float g_attackRange = 600.0f;
+constexpr float g_deltaAngle = 1.5f;
 constexpr float g_PI = 3.14159265359f;
 constexpr float g_borderAddition = 400.0f;
 constexpr glm::vec3 g_projSize = { 2.0f, 15.0f, 0.0f };
@@ -91,7 +91,7 @@ void Enemy::patroll(float dt, const GameObj& playerObj)
 	if (glm::length(playerObj.getPos() - m_pos) <= g_attackRange)
 	{
 		m_state = EnemyState::Fighting;
-		m_shootingTimeGap = static_cast<float>(std::rand() % 2, 1);
+		m_shootingTimeGap = static_cast<float>(std::rand() % 2);
 		m_timer = 0.0f;
 	}
 

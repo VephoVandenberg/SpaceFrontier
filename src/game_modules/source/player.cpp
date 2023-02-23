@@ -84,3 +84,9 @@ void Player::checkProjEnemyCoollision(Enemy& enemy)
 		m_projectiles.end()
 		);
 }
+
+void Player::reset(glm::vec3 pos)
+{
+	m_pos = pos;
+	m_health = 10.0f;
+}
