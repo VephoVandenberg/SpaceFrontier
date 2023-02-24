@@ -45,7 +45,7 @@ void Enemy::update(float dt, float borderX, float borderY, const glm::vec3& came
 		break;
 
 	case EnemyState::Fleeing:
-		flee();
+		flee(dt, playerObj);
 		break;
 	}
 
@@ -139,12 +139,23 @@ void Enemy::fight(float dt, const GameObj& playerObj)
 	{
 		m_state = EnemyState::Idle;
 	}
+
+	if (m_health == 1)
+	{
+		m_state = EnemyState::Fleeing;
+	}
 }
 
 
-void Enemy::flee()
+void Enemy::flee(float dt, const GameObj& playerObj)
 {
+	m_pos -= m_velocity * dt;
 
+	if (glm::length(playerObj.getPos() - m_pos) < g_attackRange)
+	{
+		m_state = EnemyState::Idle;
+		m_timer = 0.0f;
+	}
 }
 
 void Enemy::shoot()
@@ -185,4 +196,9 @@ int Enemy::checkProjPlayerCoollision(const GameObj& playerObj)
 		m_projectiles.end());
 
 	return damage;
+}
+
+void Enemy::checkEnemyEnemiesCollision(const std::vector<Enemy>& m_enemies)
+{
+
 }

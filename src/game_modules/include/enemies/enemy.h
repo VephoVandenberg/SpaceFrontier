@@ -1,6 +1,7 @@
 #pragma once
 
 #include <list>
+#include <vector>
 
 #include "../game_object.h"
 #include "../projectile.h"
@@ -29,6 +30,7 @@ namespace GAME_NAMESPACE
 			void draw(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos) override;
 			void drawProjectiles(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos);
 			int checkProjPlayerCoollision(const GameObj& playerObj);
+			void checkEnemyEnemiesCollision(const std::vector<Enemy>& m_enemies);
 
 			inline void takeDamage() { m_health--; }
 			inline bool isAlive() const { return m_health > 0; }
@@ -42,10 +44,10 @@ namespace GAME_NAMESPACE
 			Enemy& operator=(const Enemy&) = delete;
 
 		protected:
-			void idle(float dt, const GameObj& playerObj);
-			void patroll(float dt, const GameObj& playerObj);
-			void fight(float dt, const GameObj& playerObj);
-			void flee();
+			virtual void idle(float dt, const GameObj& playerObj);
+			virtual void patroll(float dt, const GameObj& playerObj);
+			virtual void fight(float dt, const GameObj& playerObj);
+			virtual void flee(float dt, const GameObj& playerObj);
 
 		private:
 			System::Texture m_texture;
