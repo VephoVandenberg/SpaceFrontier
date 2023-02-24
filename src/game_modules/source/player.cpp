@@ -1,3 +1,6 @@
+#include "../../system/include/renderer.h"
+#include "../../system/include/shader.h"
+
 #include "../include/player.h"
 
 using namespace GAME_NAMESPACE::GameModule;

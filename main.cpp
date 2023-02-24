@@ -5,10 +5,11 @@ using App = GAME_NAMESPACE::Game;
 /*
 * TODO List
 * Agenda:
-* - learn about rng
 * Later:
-* - stationary objects like asteroids must be added, as well as dynamic meteors
+* - how to make enemies know about each other's position and not to overlap with each other?
 * - how the map should be drawn, think about it?
+* - stationary objects like asteroids must be added, as well as dynamic meteors
+* - learn about rng
 * - draw textures
 */
 

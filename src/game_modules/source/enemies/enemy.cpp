@@ -2,13 +2,15 @@
 
 #include "../../include/enemies/enemy.h"
 
+#include "../../../system/include/texture.h"
+
 using namespace GAME_NAMESPACE::GameModule;
 
-constexpr float g_enemyVelocityCoeff = 100.0f;
+constexpr float g_enemyVelocityCoeff = 350.0f;
 constexpr float g_attackRange = 600.0f;
 constexpr float g_deltaAngle = 1.5f;
 constexpr float g_PI = 3.14159265359f;
-constexpr float g_borderAddition = 400.0f;
+constexpr float g_borderAddition = 200.0f;
 constexpr glm::vec3 g_projSize = { 2.0f, 15.0f, 0.0f };
 
 Enemy::Enemy(glm::vec3 pos, glm::vec3 scale, System::Texture& texture)
@@ -31,7 +33,7 @@ void Enemy::update(float dt, float borderX, float borderY, const glm::vec3& came
 	{
 
 	case EnemyState::Idle:
-		idle(playerObj);
+		idle(dt, playerObj);
 		break;
 
 	case EnemyState::Patrolling:
@@ -62,20 +64,20 @@ void Enemy::update(float dt, float borderX, float borderY, const glm::vec3& came
 	}
 }
 
-void Enemy::idle(const GameObj& playerObj)
+void Enemy::idle(float dt, const GameObj& playerObj)
 {
 	if (m_timer >= 3.0f)
 	{
 		m_state = EnemyState::Patrolling;
 		m_timer = 0.0f;
 
-		m_velocity *= -1.0f;
+		m_velocity *= -1;
 	}
 
 	if (glm::length(playerObj.getPos() - m_pos) <= g_attackRange)
 	{
 		m_state = EnemyState::Fighting;
-		m_shootingTimeGap = static_cast<float>(std::rand() % 3 + 1);
+		m_shootingTimeGap = static_cast<float>(std::rand() % 2 + 1);
 		m_timer = 0.0f;
 	}
 }
@@ -91,7 +93,7 @@ void Enemy::patroll(float dt, const GameObj& playerObj)
 	if (glm::length(playerObj.getPos() - m_pos) <= g_attackRange)
 	{
 		m_state = EnemyState::Fighting;
-		m_shootingTimeGap = static_cast<float>(std::rand() % 2);
+		m_shootingTimeGap = static_cast<float>(std::rand() % 2 + 1);
 		m_timer = 0.0f;
 	}
 
@@ -119,16 +121,21 @@ void Enemy::fight(float dt, const GameObj& playerObj)
 		m_velocity.y = -glm::cos(m_angle) * g_enemyVelocityCoeff;
 		m_timer = 0.0f;
 	}
-	else
+
+	if (m_timer >= m_shootingTimeGap && dot >= 0.895f)
 	{
-		if (m_timer >= m_shootingTimeGap)
-		{
-			shoot();
-			m_timer = 0.0f;
-		}
+		shoot();
+		m_timer = 0.0f;
 	}
 
-	if (glm::length(playerObj.getPos() - m_pos) >= g_attackRange + 200)
+	if (glm::length(playerObj.getPos() - m_pos) >= g_attackRange - 200.0f)
+	{
+		m_pos += m_velocity * dt;
+	}
+
+	m_velocity *= 0.995f;
+
+	if (glm::length(playerObj.getPos() - m_pos) >= g_attackRange + 100.0f)
 	{
 		m_state = EnemyState::Idle;
 	}

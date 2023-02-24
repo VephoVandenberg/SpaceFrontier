@@ -3,16 +3,14 @@
 #include <glm/glm.hpp>
 #include <list>
 
-#include "../../system/include/renderer.h"
-#include "../../system/include/shader.h"
 #include "../../system/include/texture.h"
 
 #include "game_object.h"
-#include "projectile.h"
 #include "enemies/enemy.h"
 
 namespace GAME_NAMESPACE
 {
+
 	namespace GameModule
 	{
 		enum class MoveDir
@@ -21,6 +19,10 @@ namespace GAME_NAMESPACE
 			None,
 			Bottom
 		};
+
+		class System::Renderer;
+		class System::Shader;
+		class Projectile;
 
 		class Player : public GameObj
 		{

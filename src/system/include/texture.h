@@ -15,6 +15,7 @@ namespace GAME_NAMESPACE
 			~Texture();
 
 			void bind();
+			void unbind();
 				
 			Texture() = default;
 			Texture(const Texture& texture) = default;

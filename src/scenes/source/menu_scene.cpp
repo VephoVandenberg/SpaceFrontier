@@ -2,7 +2,6 @@
 
 #include "../../system/include/resource_manager.h"
 
-#include "../include/level1.h"
 #include "../include/menu_scene.h"
 
 using namespace GAME_NAMESPACE::GameScene;
@@ -31,8 +30,10 @@ void Menu::onAttach()
 	glm::vec3 exitPos = glm::vec3(panelPos.x + g_panelScale.x / 4.0f, panelPos.y + g_panelScale.y - 2.0f * buttonScale.y, 0.0f);
 
 	m_panel = GameModule::GameObj(panelPos, g_panelScale, glm::vec3(1.0f));
-	m_start = Button(startPos, buttonScale, glm::vec3(0.0f));
-	m_exit = Button(exitPos, buttonScale, glm::vec3(0.0f));
+	m_start = Button(startPos, buttonScale, glm::vec3(1.0f), 
+		System::ResourceManager::getInstance().getTexture("start_button"));
+	m_exit = Button(exitPos, buttonScale, glm::vec3(1.0f),
+		System::ResourceManager::getInstance().getTexture("exit_button"));
 }
 
 void Menu::update(float dt, const glm::vec3& cameraView)
@@ -97,7 +98,7 @@ void Menu::onDetatch()
 
 void Menu::render(const glm::vec3& cameraView)
 {
-	m_panel.draw(System::ResourceManager::getInstance().getShader("base_button"), m_renderer, cameraView);
+	m_panel.draw(System::ResourceManager::getInstance().getShader("panel_obj"), m_renderer, cameraView);
 	m_start.draw(System::ResourceManager::getInstance().getShader("base_button"), m_renderer, cameraView);
 	m_exit.draw(System::ResourceManager::getInstance().getShader("base_button"), m_renderer, cameraView);
 }

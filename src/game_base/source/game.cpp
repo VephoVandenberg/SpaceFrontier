@@ -41,11 +41,17 @@ void Game::init()
 		.setShader("base_proj", "shaders/base_proj_shader.vert", "shaders/base_proj_shader.frag");
 	System::ResourceManager::getInstance()
 		.setShader("base_button", "shaders/button_shader.vert", "shaders/button_shader.frag");
+	System::ResourceManager::getInstance()
+		.setShader("panel_obj", "shaders/panel_shader.vert", "shaders/panel_shader.frag");
 
-		System::ResourceManager::getInstance()
+	System::ResourceManager::getInstance()
 		.setTexture("player", "textures/player_ship.png");
 	System::ResourceManager::getInstance()
 		.setTexture("enemy_base", "textures/enemy_ship.png");
+	System::ResourceManager::getInstance()
+		.setTexture("start_button", "textures/start_button.png");
+	System::ResourceManager::getInstance()
+		.setTexture("exit_button", "textures/exit_button.png");
 
 
 	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(m_window->getWidth()),
@@ -74,6 +80,11 @@ void Game::init()
 	System::ResourceManager::getInstance().getShader("base_button").setMatrix("uProjection", projection);
 	System::ResourceManager::getInstance().getShader("base_button").setMatrix("uView", view);
 	System::ResourceManager::getInstance().getShader("base_button").unbind();
+
+	System::ResourceManager::getInstance().getShader("panel_obj").use();
+	System::ResourceManager::getInstance().getShader("panel_obj").setMatrix("uProjection", projection);
+	System::ResourceManager::getInstance().getShader("panel_obj").setMatrix("uView", view);
+	System::ResourceManager::getInstance().getShader("panel_obj").unbind();
 }
 
 void Game::onEvent(System::Event& event)

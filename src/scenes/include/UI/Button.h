@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../../../system/include/texture.h"
+
 #include "../../../game_modules/include/game_object.h"
 
 namespace GAME_NAMESPACE
@@ -9,9 +11,10 @@ namespace GAME_NAMESPACE
 		class Button : public GameModule::GameObj
 		{
 		public:
-			Button(glm::vec3 pos, glm::vec3 scale, glm::vec3 color);
+			Button(glm::vec3 pos, glm::vec3 scale, glm::vec3 color, System::Texture& texture);
 
 			void changeColor();
+			void draw(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos) override;
 
 			inline void click() { m_isClicked = true; }
 			inline void makeTarget() { m_isTarget = true; }
@@ -28,6 +31,8 @@ namespace GAME_NAMESPACE
 		private:
 			bool m_isClicked = false;
 			bool m_isTarget = false;
+
+			System::Texture m_texture;
 		};
 	}
 }

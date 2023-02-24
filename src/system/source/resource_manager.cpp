@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include "../include/shader.h"
+#include "../include/texture.h"
 #include "../include/resource_manager.h"
 
 using namespace GAME_NAMESPACE::System;

@@ -2,8 +2,6 @@
 
 #include <list>
 
-#include "../../../system/include/texture.h"
-
 #include "../game_object.h"
 #include "../projectile.h"
 
@@ -18,6 +16,8 @@ namespace GAME_NAMESPACE
 			Fighting,
 			Fleeing
 		};
+
+		class System::Texture;
 
 		class Enemy : public GameObj
 		{
@@ -42,7 +42,7 @@ namespace GAME_NAMESPACE
 			Enemy& operator=(const Enemy&) = delete;
 
 		protected:
-			void idle(const GameObj& playerObj);
+			void idle(float dt, const GameObj& playerObj);
 			void patroll(float dt, const GameObj& playerObj);
 			void fight(float dt, const GameObj& playerObj);
 			void flee();

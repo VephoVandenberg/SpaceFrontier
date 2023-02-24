@@ -2,8 +2,6 @@
 
 #include <glm/glm.hpp>
 
-#include "../../system/include/shader.h"
-
 #include "game_object.h"
 
 namespace GAME_NAMESPACE

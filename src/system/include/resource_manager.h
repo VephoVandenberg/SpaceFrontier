@@ -4,13 +4,13 @@
 #include <unordered_map>
 #include <memory>
 
-#include "shader.h"
-#include "texture.h"
-
 namespace GAME_NAMESPACE
 {
 	namespace System
 	{
+		class Shader;
+		class Texture;
+
 		class ResourceManager
 		{
 		public:
