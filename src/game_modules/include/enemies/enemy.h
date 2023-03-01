@@ -30,10 +30,13 @@ namespace GAME_NAMESPACE
 			void draw(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos) override;
 			void drawProjectiles(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos);
 			int checkProjPlayerCoollision(const GameObj& playerObj);
-			void checkEnemyEnemiesCollision(const std::vector<Enemy>& m_enemies);
+			void checkEnemyEnemyCollision(const GameObj& enemy);
 
 			inline void takeDamage() { m_health--; }
 			inline bool isAlive() const { return m_health > 0; }
+
+			bool operator==(const Enemy& enemy);
+			bool operator!=(const Enemy& enemy);
 
 			Enemy() = default;
 			virtual ~Enemy() = default;

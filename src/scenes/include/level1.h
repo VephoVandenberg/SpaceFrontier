@@ -39,6 +39,7 @@ namespace GAME_NAMESPACE
 
 		private:
 			void processCollisions();
+			void renderEnemy(GameModule::Enemy& enemy, const glm::vec3& cameraView);
 
 			float m_width;
 			float m_height;

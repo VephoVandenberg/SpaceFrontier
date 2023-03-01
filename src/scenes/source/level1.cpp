@@ -41,16 +41,32 @@ void Level1::onDetatch()
 
 void Level1::update(float dt, const glm::vec3& cameraView)
 {
+	processCollisions();
+
 	for (auto& enemy : m_enemies)
 	{
 		enemy.update(dt, m_width, m_height, cameraView, dynamic_cast<const GameModule::GameObj&>(m_player));
 
+		for (auto& collEnemy : m_enemies)
+		{
+			if (enemy != collEnemy)
+			{
+				enemy.checkEnemyEnemyCollision(collEnemy);
+			}
+		}
+
 		int damage = enemy.checkProjPlayerCoollision(dynamic_cast<const GameModule::GameObj&>(m_player));
 		m_player.checkProjEnemyCoollision(enemy);
 		m_player.takeDamage(damage);
+
+		if (!m_player.isAlive())
+		{
+			m_nextScene = Scenes::MenuScene;
+		}
+
+		renderEnemy(enemy, cameraView);
 	}
 
-	processCollisions();
 
 	render(cameraView);
 }
@@ -60,20 +76,17 @@ void Level1::render(const glm::vec3& cameraView)
 	m_player.draw(System::ResourceManager::getInstance().getShader("base_obj"), m_renderer, cameraView);
 	m_player.drawProjectiles(System::ResourceManager::getInstance().getShader("base_proj"), m_renderer, cameraView);
 
-	for (auto& enemy : m_enemies)
-	{
-		enemy.draw(System::ResourceManager::getInstance().getShader("base_obj"), m_renderer, cameraView);
-		enemy.drawProjectiles(System::ResourceManager::getInstance().getShader("base_proj"), m_renderer, cameraView);
+}
 
-		if (!m_player.isAlive())
-		{
-			m_nextScene = Scenes::MenuScene;
-		}
-	}
+void Level1::renderEnemy(GameModule::Enemy& enemy, const glm::vec3& cameraView)
+{
+	enemy.draw(System::ResourceManager::getInstance().getShader("base_obj"), m_renderer, cameraView);
+	enemy.drawProjectiles(System::ResourceManager::getInstance().getShader("base_proj"), m_renderer, cameraView);
 }
 
 void Level1::processCollisions()
 {
+
 	m_enemies.erase(
 		std::remove_if(
 			m_enemies.begin(),

@@ -20,7 +20,7 @@ Enemy::Enemy(glm::vec3 pos, glm::vec3 scale, System::Texture& texture)
 	, m_timer(0.0f)
 	, m_state(EnemyState::Idle)
 {
-	m_velocity.x =  glm::sin(m_angle) * g_enemyVelocityCoeff;
+	m_velocity.x = glm::sin(m_angle) * g_enemyVelocityCoeff;
 	m_velocity.y = -glm::cos(m_angle) * g_enemyVelocityCoeff;
 }
 
@@ -198,7 +198,24 @@ int Enemy::checkProjPlayerCoollision(const GameObj& playerObj)
 	return damage;
 }
 
-void Enemy::checkEnemyEnemiesCollision(const std::vector<Enemy>& m_enemies)
+void Enemy::checkEnemyEnemyCollision(const GameObj& enemy)
 {
+	if (checkCollision(enemy))
+	{
+		m_state = EnemyState::Idle;
+	}
+}
 
+bool Enemy::operator==(const Enemy& enemy)
+{
+	if (this == &enemy)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool Enemy::operator!=(const Enemy& enemy)
+{
+	return !(*this == enemy);
 }
