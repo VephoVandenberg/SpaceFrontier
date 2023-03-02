@@ -45,17 +45,16 @@ void Level1::update(float dt, const glm::vec3& cameraView)
 
 	for (auto& enemy : m_enemies)
 	{
-		enemy.update(dt, m_width, m_height, cameraView, dynamic_cast<const GameModule::GameObj&>(m_player));
-
 		for (auto& collEnemy : m_enemies)
 		{
 			if (enemy != collEnemy)
 			{
-				enemy.checkEnemyEnemyCollision(collEnemy);
+				enemy.checkEnemyEnemyCollision(collEnemy, m_player);
 			}
 		}
+		enemy.update(dt, m_width, m_height, cameraView, m_player);
 
-		int damage = enemy.checkProjPlayerCoollision(dynamic_cast<const GameModule::GameObj&>(m_player));
+		int damage = enemy.checkProjPlayerCoollision(m_player);
 		m_player.checkProjEnemyCoollision(enemy);
 		m_player.takeDamage(damage);
 

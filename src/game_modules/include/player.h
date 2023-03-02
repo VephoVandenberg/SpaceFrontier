@@ -41,6 +41,7 @@ namespace GAME_NAMESPACE
 
 			inline void takeDamage(int damage) { m_health -= damage; }
 			inline bool isAlive() const { return m_health > 0.0f; }
+			inline glm::vec3 getVelocity() const { return m_velocity; }
 
 			Player(const Player&) = delete;
 			Player(Player&&) = delete;

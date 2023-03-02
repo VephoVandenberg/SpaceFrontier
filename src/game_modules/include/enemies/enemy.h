@@ -19,18 +19,21 @@ namespace GAME_NAMESPACE
 		};
 
 		class System::Texture;
+		class Player;
 
 		class Enemy : public GameObj
 		{
 		public:
 			Enemy(glm::vec3 pos, glm::vec3 scale, System::Texture& texture);
 
-			virtual void update(float dt, float borderX, float borderY, const glm::vec3& cameraPos, const GameObj& playerObj);
+			virtual void update(float dt, float borderX, float borderY, const glm::vec3& cameraPos, const Player& player);
 			virtual void shoot();
+
 			void draw(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos) override;
 			void drawProjectiles(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos);
-			int checkProjPlayerCoollision(const GameObj& playerObj);
-			void checkEnemyEnemyCollision(const GameObj& enemy);
+			void checkEnemyEnemyCollision(const Enemy& enemy, const Player& player);
+			int checkProjPlayerCoollision(const Player& player);
+			
 
 			inline void takeDamage() { m_health--; }
 			inline bool isAlive() const { return m_health > 0; }
@@ -42,15 +45,15 @@ namespace GAME_NAMESPACE
 			virtual ~Enemy() = default;
 			Enemy(Enemy&&) = default;
 			Enemy& operator=(Enemy&&) = default;
-			
+
 			Enemy(const Enemy&) = delete;
 			Enemy& operator=(const Enemy&) = delete;
 
 		protected:
-			virtual void idle(float dt, const GameObj& playerObj);
-			virtual void patroll(float dt, const GameObj& playerObj);
-			virtual void fight(float dt, const GameObj& playerObj);
-			virtual void flee(float dt, const GameObj& playerObj);
+			virtual void idle(float dt, const Player& player);
+			virtual void patroll(float dt, const Player& player);
+			virtual void fight(float dt, const Player& player);
+			virtual void flee(float dt, const Player& player);
 
 		private:
 			System::Texture m_texture;
