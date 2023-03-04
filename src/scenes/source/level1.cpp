@@ -7,6 +7,9 @@ using namespace GAME_NAMESPACE::GameScene;
 
 constexpr glm::vec3 g_baseEnemySize = { 80.0f, 80.0f, 0.0f };
 constexpr float g_deltaAngle = 2.0f;
+constexpr float g_groupWidth = 400.0f;
+constexpr float g_groupHeight = 500.0f;
+constexpr unsigned int g_totalEnemyNumber = 28;
 
 Level1::Level1(float width, float height, GameModule::Player& player, System::Renderer& renderer)
 	: m_width(width)
@@ -24,13 +27,26 @@ Level1::~Level1()
 
 void Level1::onAttach()
 {
-	m_player.reset(glm::vec3(m_width/2.0f, m_height/2.0f, 0.0f));
-	for (int i = 0; i < 10; i++)
+	// Init Enemies
+	glm::vec3 initialGroupPos = glm::vec3(200.0f, -200.0f, 0.0f);
+	m_player.reset(glm::vec3(m_width / 2.0f, m_height / 2.0f, 0.0f));
+	for (unsigned int i = 0, groupIndex = 0; i < g_totalEnemyNumber; i++)
 	{
-		glm::vec3 pos(200.0f + (i + 1) * (g_baseEnemySize.x + 30.0f), 200.0f, 0.0f);
-		m_enemies.emplace_back(GameModule::Enemy(pos, g_baseEnemySize,
+		m_enemies.emplace_back(GameModule::Enemy(glm::vec3(0.0f), g_baseEnemySize,
 			System::ResourceManager::getInstance().getTexture("enemy_base")));
+
+		/*
+		if (g_totalEnemyNumber % (groupIndex + 1) == 0)
+		{
+			m_enemyGroups[groupIndex] = EnemyGroup(initialGroupPos, m_enemies[i].getScale(), g_groupWidth, g_groupHeight);
+			m_enemyGroups[groupIndex].setObjects();
+			groupIndex++;
+		}
+		*/
 	}
+
+	// Init Space Objects
+
 	m_nextScene = Scenes::Level1Scene;
 }
 

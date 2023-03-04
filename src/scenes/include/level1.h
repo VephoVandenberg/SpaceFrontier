@@ -1,11 +1,14 @@
 #pragma once
 
 #include <vector>
+#include <array>
 
 #include "../../system/include/renderer.h"
 
+#include "../../game_modules/include/group_holder.h"
 #include "../../game_modules/include/player.h"
 #include "../../game_modules/include/enemies/enemy.h"
+#include "../../game_modules/include/space_objects/space_object.h"
 
 #include "scene.h"
 
@@ -13,6 +16,12 @@ namespace GAME_NAMESPACE
 {
 	namespace GameScene
 	{
+		namespace
+		{
+			constexpr unsigned int g_enemyGroupNumber = 4;
+			constexpr unsigned int g_spaceObjectGroupNumber = 6;
+		}
+
 		class Level1 : public Scene
 		{
 		public:
@@ -47,6 +56,13 @@ namespace GAME_NAMESPACE
 			System::Renderer& m_renderer;
 			GameModule::Player& m_player;
 			std::vector<GameModule::Enemy> m_enemies;
+			std::vector<GameModule::SpaceObj> m_spaceObjects;
+
+			using EnemyGroup = GameModule::DataStructures::GroupHolder<GameModule::Enemy>;
+			std::array<EnemyGroup, g_enemyGroupNumber> m_enemyGroups;
+
+			using SpaceObjectGroup = GameModule::DataStructures::GroupHolder<GameModule::SpaceObj>;
+			std::array<SpaceObjectGroup, g_spaceObjectGroupNumber> m_spaceObjectGroups;
 		};
 	}
 }

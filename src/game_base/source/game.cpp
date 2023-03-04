@@ -52,6 +52,20 @@ void Game::init()
 		.setTexture("start_button", "textures/start_button.png");
 	System::ResourceManager::getInstance()
 		.setTexture("exit_button", "textures/exit_button.png");
+	System::ResourceManager::getInstance()
+		.setTexture("asteroid_huge_minerals", "textures/asteroid_huge_minerals.png");
+	System::ResourceManager::getInstance()
+		.setTexture("asteroid_huge", "textures/asteroid_huge.png");
+	System::ResourceManager::getInstance()
+		.setTexture("asteroid_large_minerals", "textures/asteroid_large_minerals.png");
+	System::ResourceManager::getInstance()
+		.setTexture("asteroid_large", "textures/asteroid_large.png");
+	System::ResourceManager::getInstance()
+		.setTexture("asteroid_medium_minerals", "textures/asteroid_medium_minerals.png");
+	System::ResourceManager::getInstance()
+		.setTexture("asteroid_medium", "textures/asteroid_medium.png");
+	System::ResourceManager::getInstance()
+		.setTexture("asteroid_small", "textures/asteroid_small.png");
 
 
 	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(m_window->getWidth()),

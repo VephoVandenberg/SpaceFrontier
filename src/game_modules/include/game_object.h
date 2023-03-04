@@ -20,6 +20,8 @@ namespace GAME_NAMESPACE
 			inline glm::vec3 getPos() const { return m_pos; }
 			inline glm::vec3 getScale() const { return m_scale; }
 
+			inline void setPos(glm::vec3 pos) { m_pos = pos; }
+
 			GameObj() = default;
 			virtual ~GameObj() = default;
 			GameObj(const GameObj&) = default;
