@@ -8,8 +8,8 @@ using namespace GAME_NAMESPACE::GameScene;
 constexpr glm::vec3 g_baseEnemySize = { 80.0f, 80.0f, 0.0f };
 constexpr float g_deltaAngle = 2.0f;
 constexpr float g_groupWidth = 400.0f;
-constexpr float g_groupHeight = 500.0f;
-constexpr unsigned int g_totalEnemyNumber = 28;
+constexpr float g_groupHeight = 700.0f;
+constexpr unsigned int g_totalEnemyNumber = 30;
 
 Level1::Level1(float width, float height, GameModule::Player& player, System::Renderer& renderer)
 	: m_width(width)
@@ -27,26 +27,30 @@ Level1::~Level1()
 
 void Level1::onAttach()
 {
+	glm::vec3 initialEnemyGroupPos = glm::vec3(200.0f, -200.0f, 0.0f);
+	// Init groups
+	for (auto& group : m_enemyGroups)
+	{
+		group = GameModule::DataStructures::GroupHolder(initialEnemyGroupPos, g_groupWidth, g_groupHeight);
+	}
+
 	// Init Enemies
-	glm::vec3 initialGroupPos = glm::vec3(200.0f, -200.0f, 0.0f);
 	m_player.reset(glm::vec3(m_width / 2.0f, m_height / 2.0f, 0.0f));
+
 	for (unsigned int i = 0, groupIndex = 0; i < g_totalEnemyNumber; i++)
 	{
 		m_enemies.emplace_back(GameModule::Enemy(glm::vec3(0.0f), g_baseEnemySize,
 			System::ResourceManager::getInstance().getTexture("enemy_base")));
-
-		/*
-		if (g_totalEnemyNumber % (groupIndex + 1) == 0)
-		{
-			m_enemyGroups[groupIndex] = EnemyGroup(initialGroupPos, m_enemies[i].getScale(), g_groupWidth, g_groupHeight);
-			m_enemyGroups[groupIndex].setObjects();
-			groupIndex++;
-		}
-		*/
 	}
 
-	// Init Space Objects
+	for (auto& enemy : m_enemies)
+	{
+		m_enemyGroups[0].push_back(&enemy);
+	}
 
+	m_enemyGroups[0].setObjects();
+
+	// Init Space Objects
 	m_nextScene = Scenes::Level1Scene;
 }
 
@@ -90,7 +94,6 @@ void Level1::render(const glm::vec3& cameraView)
 {
 	m_player.draw(System::ResourceManager::getInstance().getShader("base_obj"), m_renderer, cameraView);
 	m_player.drawProjectiles(System::ResourceManager::getInstance().getShader("base_proj"), m_renderer, cameraView);
-
 }
 
 void Level1::renderEnemy(GameModule::Enemy& enemy, const glm::vec3& cameraView)
@@ -101,7 +104,6 @@ void Level1::renderEnemy(GameModule::Enemy& enemy, const glm::vec3& cameraView)
 
 void Level1::processCollisions()
 {
-
 	m_enemies.erase(
 		std::remove_if(
 			m_enemies.begin(),

@@ -58,11 +58,9 @@ namespace GAME_NAMESPACE
 			std::vector<GameModule::Enemy> m_enemies;
 			std::vector<GameModule::SpaceObj> m_spaceObjects;
 
-			using EnemyGroup = GameModule::DataStructures::GroupHolder<GameModule::Enemy>;
-			std::array<EnemyGroup, g_enemyGroupNumber> m_enemyGroups;
-
-			using SpaceObjectGroup = GameModule::DataStructures::GroupHolder<GameModule::SpaceObj>;
-			std::array<SpaceObjectGroup, g_spaceObjectGroupNumber> m_spaceObjectGroups;
+			using Group = GAME_NAMESPACE::GameModule::DataStructures::GroupHolder;
+			std::array<Group, g_enemyGroupNumber> m_enemyGroups;
+			std::array<Group, g_spaceObjectGroupNumber> m_spaceObjectGroups;
 		};
 	}
 }

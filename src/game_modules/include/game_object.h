@@ -7,6 +7,7 @@
 
 namespace GAME_NAMESPACE
 {
+
 	namespace GameModule
 	{
 		class GameObj
