@@ -4,18 +4,18 @@
 
 #include <glm/glm.hpp>
 
-#include "../include/game_object.h"
-
 namespace GAME_NAMESPACE
 {
 	namespace GameModule
 	{
+		class GameObj;
+
 		namespace DataStructures
 		{
 			class GroupHolder
 			{
 			public:
-				GroupHolder(glm::vec3 pos, float width, float height);
+				GroupHolder(glm::vec3 pos, float distanceToKeep, float width, float height);
 
 				void push_back(GameObj* element);
 				void setObjects();
@@ -32,6 +32,7 @@ namespace GAME_NAMESPACE
 
 			private:
 				glm::vec3 m_pos;
+				float m_distanceToKeep;
 				float m_width = 0;
 				float m_height = 0;
 

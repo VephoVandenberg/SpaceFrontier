@@ -9,7 +9,8 @@ constexpr glm::vec3 g_baseEnemySize = { 80.0f, 80.0f, 0.0f };
 constexpr float g_deltaAngle = 2.0f;
 constexpr float g_groupWidth = 400.0f;
 constexpr float g_groupHeight = 700.0f;
-constexpr unsigned int g_totalEnemyNumber = 30;
+constexpr float g_distanceToKeep = 40.0f;
+constexpr unsigned int g_totalEnemyNumber = 6;
 
 Level1::Level1(float width, float height, GameModule::Player& player, System::Renderer& renderer)
 	: m_width(width)
@@ -31,7 +32,7 @@ void Level1::onAttach()
 	// Init groups
 	for (auto& group : m_enemyGroups)
 	{
-		group = GameModule::DataStructures::GroupHolder(initialEnemyGroupPos, g_groupWidth, g_groupHeight);
+		group = GameModule::DataStructures::GroupHolder(initialEnemyGroupPos, g_distanceToKeep, g_groupWidth, g_groupHeight);
 	}
 
 	// Init Enemies
@@ -63,19 +64,23 @@ void Level1::update(float dt, const glm::vec3& cameraView)
 {
 	processCollisions();
 
-	for (auto& enemy : m_enemies)
+	for (auto it_enemy = m_enemies.begin(); 
+		it_enemy != m_enemies.end(); 
+		it_enemy++)
 	{
-		for (auto& collEnemy : m_enemies)
+		for (auto it_enemyIn = m_enemies.begin(); 
+			it_enemyIn != it_enemy; 
+			it_enemyIn++)
 		{
-			if (enemy != collEnemy)
+			if (it_enemy->checkMessWithEnemy(dt, g_distanceToKeep, *it_enemyIn, m_player))
 			{
-				enemy.checkEnemyEnemyCollision(collEnemy, m_player);
+				break;
 			}
 		}
-		enemy.update(dt, m_width, m_height, cameraView, m_player);
+		it_enemy->update(dt, m_width, m_height, cameraView, m_player);
 
-		int damage = enemy.checkProjPlayerCoollision(m_player);
-		m_player.checkProjEnemyCoollision(enemy);
+		int damage = it_enemy->checkProjPlayerCoollision(m_player);
+		m_player.checkProjEnemyCoollision(*it_enemy);
 		m_player.takeDamage(damage);
 
 		if (!m_player.isAlive())
@@ -83,7 +88,7 @@ void Level1::update(float dt, const glm::vec3& cameraView)
 			m_nextScene = Scenes::MenuScene;
 		}
 
-		renderEnemy(enemy, cameraView);
+		renderEnemy(*it_enemy, cameraView);
 	}
 
 

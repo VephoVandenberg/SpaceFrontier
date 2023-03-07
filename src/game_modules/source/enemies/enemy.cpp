@@ -28,7 +28,7 @@ Enemy::Enemy(glm::vec3 pos, glm::vec3 scale, System::Texture& texture)
 void Enemy::update(float dt, float borderX, float borderY, const glm::vec3& cameraPos, const Player& player)
 {
 	m_timer += dt;
-
+	bool isMovingForward = true;
 	// Enemy's primitive ai
 	switch (m_state)
 	{
@@ -39,6 +39,7 @@ void Enemy::update(float dt, float borderX, float borderY, const glm::vec3& came
 
 	case EnemyState::Patrolling:
 		patroll(dt, player);
+		updatePosition(dt, isMovingForward);
 		break;
 
 	case EnemyState::Fighting:
@@ -47,6 +48,7 @@ void Enemy::update(float dt, float borderX, float borderY, const glm::vec3& came
 
 	case EnemyState::Fleeing:
 		flee(dt, player);
+		updatePosition(dt, !isMovingForward);
 		break;
 	}
 
@@ -97,19 +99,17 @@ void Enemy::patroll(float dt, const Player& player)
 		m_shootingTimeGap = static_cast<float>(std::rand() % 2 + 1);
 		m_timer = 0.0f;
 	}
-
-	m_pos += m_velocity * dt;
 }
 
 void Enemy::fight(float dt, const Player& player)
 {
 	glm::vec2 normVel = glm::normalize(m_velocity);
 	glm::vec2 normVelPlayer = glm::normalize(player.getVelocity());
-	glm::vec2 normEnemyToPlayer = glm::normalize(player.getPos() + player.getScale() / 4.0f - m_pos);
+	glm::vec2 normEnemyToPlayer = glm::normalize(player.getPos() - m_pos);
 	float dotAttack = glm::dot(normVel, normEnemyToPlayer);
 	float dotChase = glm::dot(normVel, normVelPlayer);
 
-	if (dotAttack < 0.995f)
+	if (dotAttack < 0.998f)
 	{
 		float angle = glm::orientedAngle(normVel, normEnemyToPlayer) * (180.0f / g_PI);
 		if (angle < 0.0f)
@@ -120,8 +120,13 @@ void Enemy::fight(float dt, const Player& player)
 		{
 			m_angle += g_deltaAngle * dt;
 		}
-		m_velocity.x = glm::sin(m_angle) * g_enemyVelocityCoeff;
-		m_velocity.y = -glm::cos(m_angle) * g_enemyVelocityCoeff;
+
+		if (!m_isMessing)
+		{
+			m_velocity.x = glm::sin(m_angle) * g_enemyVelocityCoeff;
+			m_velocity.y = -glm::cos(m_angle) * g_enemyVelocityCoeff;
+		}
+
 		m_timer = 0.0f;
 	}
 
@@ -131,35 +136,10 @@ void Enemy::fight(float dt, const Player& player)
 		m_timer = 0.0f;
 	}
 
-	/*
-	if (glm::length(player.getPos() - m_pos) >= g_attackRange - 200.0f)
+	if (glm::length(player.getPos() - m_pos) >= g_attackRange - 100.0f)
 	{
-		if (dotChase >= 0.9f)
-		{
-			m_pos += m_velocity * dt;
-		}
-		else
-		{
-			float angle = glm::orientedAngle(normVel, normEnemyToPlayer) * (180.0f / g_PI);
-			if (angle < 0.0f)
-			{
-				m_angle -= 2.0f*g_deltaAngle * dt;
-			}
-			else
-			{
-				m_angle += 2.0f*g_deltaAngle * dt;
-			}
-			m_velocity.x = glm::sin(m_angle) * g_enemyVelocityCoeff;
-			m_velocity.y = -glm::cos(m_angle) * g_enemyVelocityCoeff;
-		}
+		updatePosition(dt, true);
 	}
-	*/
-	if (glm::length(player.getPos() - m_pos) >= g_attackRange - 200.0f)
-	{
-		m_pos += m_velocity * dt;
-	}
-
-	m_velocity *= 0.995f;
 
 	if (glm::length(player.getPos() - m_pos) >= g_attackRange + 100.0f)
 	{
@@ -172,7 +152,6 @@ void Enemy::fight(float dt, const Player& player)
 	}
 }
 
-
 void Enemy::flee(float dt, const Player& player)
 {
 	m_pos -= m_velocity * dt;
@@ -182,6 +161,12 @@ void Enemy::flee(float dt, const Player& player)
 		m_state = EnemyState::Idle;
 		m_timer = 0.0f;
 	}
+}
+
+void Enemy::updatePosition(float dt, bool isMovingForward)
+{
+	m_pos += (isMovingForward) ? m_velocity * dt : -m_velocity * dt;
+	m_velocity *= 0.995f;
 }
 
 void Enemy::shoot()
@@ -224,14 +209,30 @@ int Enemy::checkProjPlayerCoollision(const Player& player)
 	return damage;
 }
 
-void Enemy::checkEnemyEnemyCollision(const Enemy& enemy, const Player& player)
+bool Enemy::checkMessWithEnemy(float dt, const float distanceToKeep, const Enemy& enemy, const Player& player)
 {
-	if (checkCollision(enemy))
+	switch (m_state)
 	{
-		float enemy1DistToPlayer = glm::length(m_pos - player.getPos());
-		float enemy2DistToPlayer = glm::length(enemy.m_pos - player.getPos());
-		float dot = glm::dot(glm::normalize(m_velocity), glm::normalize(enemy.m_velocity));
+	case EnemyState::Fighting:
+	{
+		float distanceToEnemy = glm::length(m_pos - enemy.m_pos);
+		if (distanceToEnemy < distanceToKeep + 3.0 * m_scale.x)
+		{
+			glm::vec3 m_velocityToKeepDistance = 0.3f * glm::normalize(m_pos - enemy.m_pos);
+			m_velocity += m_velocityToKeepDistance;
+			m_isMessing = true;
+		}
+		else 
+		{
+			m_isMessing = false;
+		}
+	}break;
+
+	default:
+		break;
 	}
+
+	return m_isMessing;
 }
 
 bool Enemy::operator==(const Enemy& enemy)

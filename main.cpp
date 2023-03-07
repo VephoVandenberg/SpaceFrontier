@@ -5,8 +5,8 @@ using App = GAME_NAMESPACE::Game;
 /*
 * TODO List
 * Agenda:
-* Later:
 * - how to make enemies know about each other's position and not to overlap with each other?
+* Later:
 * - how the map should be drawn, think about it?
 * - how the groups must work, or should I actually have them in the game?
 * - simple init of space objects

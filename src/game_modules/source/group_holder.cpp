@@ -1,3 +1,5 @@
+#include "../include/game_object.h"
+
 #include "../include/group_holder.h"
 
 using namespace GAME_NAMESPACE::GameModule;
@@ -5,8 +7,9 @@ using namespace GAME_NAMESPACE::GameModule::DataStructures;
 
 constexpr unsigned int g_initNumber = 16;
 
-GroupHolder::GroupHolder(glm::vec3 pos, float width, float height)
+GroupHolder::GroupHolder(glm::vec3 pos, float distanceToKeep, float width, float height)
 	: m_pos(pos)
+	, m_distanceToKeep(distanceToKeep)
 	, m_width(width)
 	, m_height(height)
 {}
@@ -28,8 +31,8 @@ void GroupHolder::setObjects()
 	for (unsigned int i = 0; i < m_objects.size(); i++)
 	{
 		glm::vec3 newPos = {
-			m_pos.x + x * (m_objects[i]->getScale().x + 30.0f),
-			m_pos.y + y * (m_objects[i]->getScale().y + 30.0f),
+			m_pos.x + x * (m_objects[i]->getScale().x + m_distanceToKeep),
+			m_pos.y + y * (m_objects[i]->getScale().y + m_distanceToKeep),
 			0.0f };
 
 		m_objects[i]->setPos(newPos);

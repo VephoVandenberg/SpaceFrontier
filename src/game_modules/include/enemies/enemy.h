@@ -15,6 +15,7 @@ namespace GAME_NAMESPACE
 			Idle = 1,
 			Patrolling,
 			Fighting,
+			Chasing,
 			Fleeing
 		};
 
@@ -29,11 +30,12 @@ namespace GAME_NAMESPACE
 			virtual void update(float dt, float borderX, float borderY, const glm::vec3& cameraPos, const Player& player);
 			virtual void shoot();
 
+			void updatePosition(float dt, bool isMovingForward);
 			void draw(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos) override;
 			void drawProjectiles(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos);
-			void checkEnemyEnemyCollision(const Enemy& enemy, const Player& player);
 			int checkProjPlayerCoollision(const Player& player);
-			
+
+			bool checkMessWithEnemy(float dt, const float distanceToKeep, const Enemy& enemy, const Player& player);
 
 			inline void takeDamage() { m_health--; }
 			inline bool isAlive() const { return m_health > 0; }
@@ -65,6 +67,8 @@ namespace GAME_NAMESPACE
 
 			std::list<Projectile> m_projectiles;
 			EnemyState m_state = EnemyState::Idle;
+
+			bool m_isMessing = false;
 		};
 	}
 }
