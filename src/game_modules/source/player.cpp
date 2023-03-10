@@ -22,14 +22,14 @@ void Player::update(float dt, float da, float borderX, float borderY, glm::vec3&
 
 	if (dir == MoveDir::Up)
 	{
-		m_velocity.x = glm::sin(m_angle) * m_velocityCoeff;
-		m_velocity.y = -glm::cos(m_angle) * m_velocityCoeff;
+		m_velocity.x = glm::sin(glm::radians(m_angle)) * m_velocityCoeff;
+		m_velocity.y = -glm::cos(glm::radians(m_angle)) * m_velocityCoeff;
 	}
 	else if (dir == MoveDir::Bottom)
 	{
 		m_angle -= 2.0f * da * dt;
-		m_velocity.x = -glm::sin(m_angle) * m_velocityCoeff;
-		m_velocity.y = glm::cos(m_angle) * m_velocityCoeff;
+		m_velocity.x = -glm::sin(glm::radians(m_angle)) * m_velocityCoeff;
+		m_velocity.y = glm::cos(glm::radians(m_angle)) * m_velocityCoeff;
 	}
 	m_pos += m_velocity * dt;
 	cameraPos += m_velocity * dt;

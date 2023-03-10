@@ -9,8 +9,8 @@ Projectile::Projectile(glm::vec3 pos, glm::vec3 scale, glm::vec3 color, glm::vec
 	, m_additionalVelocity(shipVelocity / 12.0f)
 	, m_velocity(0.0f, 0.0f, 0.0f)
 {
-	m_velocity.x = glm::sin(m_angle) * g_projVelocityCoeff;
-	m_velocity.y = -glm::cos(m_angle) * g_projVelocityCoeff;
+	m_velocity.x = glm::sin(glm::radians(m_angle)) * g_projVelocityCoeff;
+	m_velocity.y = -glm::cos(glm::radians(m_angle)) * g_projVelocityCoeff;
 }
 
 void Projectile::update(float dt)

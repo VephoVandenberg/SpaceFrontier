@@ -1,3 +1,4 @@
+#include <time.h>
 #include <glfw3.h>
 
 #include "../../system/include/resource_manager.h"
@@ -6,11 +7,11 @@
 using namespace GAME_NAMESPACE::GameScene;
 
 constexpr glm::vec3 g_baseEnemySize = { 80.0f, 80.0f, 0.0f };
-constexpr float g_deltaAngle = 2.0f;
+constexpr float g_deltaAngle = 75.0f;
 constexpr float g_groupWidth = 400.0f;
 constexpr float g_groupHeight = 700.0f;
 constexpr float g_distanceToKeep = 40.0f;
-constexpr unsigned int g_totalEnemyNumber = 6;
+constexpr unsigned int g_totalEnemyNumber = 16;
 
 Level1::Level1(float width, float height, GameModule::Player& player, System::Renderer& renderer)
 	: m_width(width)
@@ -28,10 +29,11 @@ Level1::~Level1()
 
 void Level1::onAttach()
 {
-	glm::vec3 initialEnemyGroupPos = glm::vec3(200.0f, -200.0f, 0.0f);
+	glm::vec3 initialEnemyGroupPos = glm::vec3(500.0f, 200.0f, 0.0f);
 	// Init groups
 	for (auto& group : m_enemyGroups)
 	{
+		srand(time(NULL));
 		group = GameModule::DataStructures::GroupHolder(initialEnemyGroupPos, g_distanceToKeep, g_groupWidth, g_groupHeight);
 	}
 
@@ -68,27 +70,14 @@ void Level1::update(float dt, const glm::vec3& cameraView)
 		it_enemy != m_enemies.end(); 
 		it_enemy++)
 	{
-		for (auto it_enemyIn = m_enemies.begin(); 
-			it_enemyIn != it_enemy; 
-			it_enemyIn++)
-		{
-			if (it_enemy->checkMessWithEnemy(dt, g_distanceToKeep, *it_enemyIn, m_player))
-			{
-				break;
-			}
-		}
-		it_enemy->update(dt, m_width, m_height, cameraView, m_player);
-
-		int damage = it_enemy->checkProjPlayerCoollision(m_player);
-		m_player.checkProjEnemyCoollision(*it_enemy);
-		m_player.takeDamage(damage);
+		// Update enemies
+		it_enemy->update(dt, m_width, m_height, m_player, cameraView, m_enemies);
+		renderEnemy(*it_enemy, cameraView);
 
 		if (!m_player.isAlive())
 		{
 			m_nextScene = Scenes::MenuScene;
 		}
-
-		renderEnemy(*it_enemy, cameraView);
 	}
 
 

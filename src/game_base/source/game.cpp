@@ -1,3 +1,4 @@
+#include <time.h>
 #include <functional>
 #include <iostream>
 
@@ -29,6 +30,8 @@ Game::Game()
 
 void Game::init()
 {
+	srand(time(NULL));
+
 	System::CallbackData data;
 	data.func = std::bind(&Game::onEvent, this, std::placeholders::_1);
 

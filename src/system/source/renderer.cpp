@@ -86,7 +86,7 @@ void Renderer::setBaseUniforms(float angle, glm::vec3& pos, glm::vec3& scale, co
 	model = glm::translate(model, pos);
 
 	model = glm::translate(model, scale / 2.0f);
-	model = glm::rotate(model, angle, glm::vec3(0.0f, 0.0f, 1.0f));
+	model = glm::rotate(model, glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
 	model = glm::translate(model, -scale / 2.0f);
 
 	model = glm::scale(model, scale);
