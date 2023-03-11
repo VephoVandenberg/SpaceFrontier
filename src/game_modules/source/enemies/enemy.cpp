@@ -10,7 +10,7 @@
 using namespace GAME_NAMESPACE::GameModule;
 
 constexpr float g_enemyVelocityCoeff = 250.0f;
-constexpr float g_attackRange = 600.0f;
+constexpr float g_attackRange = 500.0f;
 constexpr float g_deltaAngle = 180.0f;
 constexpr float g_PI = 3.14159265359f;
 constexpr float g_borderAddition = 200.0f;
@@ -36,7 +36,6 @@ Enemy::Enemy(glm::vec3 pos, glm::vec3 scale, System::Texture& texture)
 void Enemy::update(float dt, float borderX, float borderY, Player& player, const glm::vec3& cameraPos, const std::vector<Enemy>& enemies)
 {
 	m_timer += dt;
-	bool isMovingForward = true;
 	// Enemy's behaviour
 	switch (m_state)
 	{
@@ -45,52 +44,80 @@ void Enemy::update(float dt, float borderX, float borderY, Player& player, const
 		glm::vec3 v1 = alignment(enemies);
 		glm::vec3 v2 = cohesion(enemies);
 		glm::vec3 v3 = separation(enemies);
+		glm::vec3 v4 = patrollVector();
 
-		m_velocity = m_velocity + (v1 + v2 + v3);
+		m_velocity = m_velocity + (v1 + v2 + v3 + v4);
 		m_velocity = g_enemyVelocityCoeff * glm::normalize(m_velocity);
 
 		// Turn the ship to align orienation vector and velocity
 		glm::vec2 normVel = glm::normalize(m_velocity);
 		float angle = glm::orientedAngle(normVel, glm::vec2(m_orientation)) * 180 / g_PI;
-		if (angle > 0.1f)
+		if (std::abs(angle) > 0.5f)
 		{
-			m_angle -= g_deltaAngle * dt;
+			m_angle += (angle > 0) ? -g_deltaAngle * dt : g_deltaAngle * dt;
 			m_orientation.x = glm::sin(glm::radians(m_angle));
 			m_orientation.y = -glm::cos(glm::radians(m_angle));
 			m_orientation = glm::normalize(m_orientation);
 		}
-		else if (angle < -0.1f)
-		{
-			m_angle += g_deltaAngle * dt;
-			m_orientation.x = glm::sin(glm::radians(m_angle));
-			m_orientation.y = -glm::cos(glm::radians(m_angle));
-			m_orientation = glm::normalize(m_orientation);
-		}
-
 		m_pos += m_velocity * dt;
 
 
-		// Just for test Reasons
-		if (m_pos.x > cameraPos.x + borderX)
+		if (glm::length(m_pos - player.getPos()) < g_attackRange - 100.0f)
 		{
-			m_pos.x = cameraPos.x - m_scale.x;
+			m_shootingTimeGap = rand() % 5 + 3;
+			m_timer = 0.0f;
+			m_state = EnemyState::Fighting;
 		}
-
-		if (m_pos.y > cameraPos.y + borderY)
+		else if (glm::length(m_pos - player.getPos()) < g_attackRange)
 		{
-			m_pos.y = cameraPos.y - m_scale.y;
-		}
-
-		if (m_pos.x < cameraPos.x - m_scale.x)
-		{
-			m_pos.x = cameraPos.x + borderX;
-		}
-
-		if (m_pos.y < cameraPos.y - m_scale.y)
-		{
-			m_pos.y = cameraPos.y + borderY;
+			// m_state = EnemyState::Chasing;
 		}
 	}break;
+
+	case EnemyState::Fighting:
+	{
+		glm::vec2 distToPlayer = glm::normalize(player.getPos() + player.getScale() / 4.0f - m_pos);
+		float angle = glm::orientedAngle(distToPlayer, glm::vec2(m_orientation));
+
+		/*
+		glm::vec3 v1 = alignment(enemies);
+		glm::vec3 v2 = cohesion(enemies);
+		glm::vec3 v3 = separation(enemies);
+		if (glm::length(v3) != 0)
+		{
+			m_velocity += v3;
+			m_velocity = g_enemyVelocityCoeff * glm::normalize(m_velocity);
+			m_pos += m_velocity * dt;
+		}
+		*/
+
+		if (std::abs(angle) > 0.0f)
+		{
+			m_angle += (angle > 0) ? -g_deltaAngle * dt : g_deltaAngle * dt;
+			m_orientation.x = glm::sin(glm::radians(m_angle));
+			m_orientation.y = -glm::cos(glm::radians(m_angle));
+			m_orientation = glm::normalize(m_orientation);
+		}
+
+		if (m_timer > m_shootingTimeGap &&
+			std::abs(angle) < 10.0f)
+		{
+			shoot();
+			m_timer = 0;
+		}
+
+		if (glm::length(m_pos - player.getPos()) > g_attackRange - 100.0f)
+		{
+			m_state = EnemyState::Patrolling;
+		}
+
+	}break;
+
+	case EnemyState::Chasing:
+	{
+
+	}break;
+
 	}
 
 	// Projectiles update
@@ -133,8 +160,9 @@ glm::vec3 Enemy::alignment(const std::vector<Enemy>& enemies) const
 	unsigned int total = 0;
 	for (auto& enemy : enemies)
 	{
-		if (*this != enemy && 
-			glm::length(m_pos - enemy.m_pos) < 100.0f)
+		if (*this != enemy &&
+			enemy.m_state != EnemyState::Fighting &&
+			glm::length(m_pos - enemy.m_pos) < 120.0f)
 		{
 			averageVel += enemy.m_velocity;
 			total++;
@@ -157,16 +185,11 @@ glm::vec3 Enemy::separation(const std::vector<Enemy>& enemies) const
 	for (auto& enemy : enemies)
 	{
 		if (*this != enemy &&
-			glm::length(m_pos - enemy.m_pos) < 120.0f)
+			glm::length(m_pos - enemy.m_pos) < 90.0f)
 		{
 			separation += (m_pos - enemy.m_pos);
 			total++;
 		}
-	}
-
-	if (total > 0)
-	{
-		separation /= total;
 	}
 
 	return separation;
@@ -179,8 +202,9 @@ glm::vec3 Enemy::cohesion(const std::vector<Enemy>& enemies) const
 
 	for (auto& enemy : enemies)
 	{
-		if (*this != enemy && 
-			glm::length(m_pos - enemy.m_pos) < 100.0f)
+		if (*this != enemy &&
+			enemy.m_state != EnemyState::Fighting &&
+			glm::length(m_pos - enemy.m_pos) < 120.0f)
 		{
 			averagePos += enemy.m_pos;
 			total++;
@@ -195,6 +219,17 @@ glm::vec3 Enemy::cohesion(const std::vector<Enemy>& enemies) const
 	}
 
 	return averagePos;
+}
+
+glm::vec3 Enemy::patrollVector() const
+{
+	float angle = m_angle + 10.0f;
+	glm::vec3 patrollVector = glm::vec3(0.0f);
+
+	patrollVector.x = glm::sin(glm::radians(angle));
+	patrollVector.y = -glm::cos(glm::radians(angle));
+
+	return patrollVector;
 }
 
 void Enemy::updatePosition(float dt, bool isMovingForward)

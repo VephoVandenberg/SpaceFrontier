@@ -49,9 +49,10 @@ namespace GAME_NAMESPACE
 
 		protected:
 			// Boid rules
-			virtual glm::vec3 alignment(const std::vector<Enemy>& enemies) const;
-			virtual glm::vec3 separation(const std::vector<Enemy>& enemies) const;
-			virtual glm::vec3 cohesion(const std::vector<Enemy>& enemies) const;
+			glm::vec3 alignment(const std::vector<Enemy>& enemies) const;
+			glm::vec3 separation(const std::vector<Enemy>& enemies) const;
+			glm::vec3 cohesion(const std::vector<Enemy>& enemies) const;
+			glm::vec3 patrollVector() const;
 
 		private:
 			System::Texture m_texture;
