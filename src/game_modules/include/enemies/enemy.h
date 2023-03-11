@@ -29,7 +29,6 @@ namespace GAME_NAMESPACE
 			virtual void update(float dt, float borderX, float borderY, Player& player, const glm::vec3& cameraPos, const std::vector<Enemy>& enemies);
 			virtual void shoot();
 
-			void updatePosition(float dt, bool isMovingForward);
 			void draw(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos) override;
 			void drawProjectiles(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos);
 
@@ -52,6 +51,7 @@ namespace GAME_NAMESPACE
 			glm::vec3 alignment(const std::vector<Enemy>& enemies) const;
 			glm::vec3 separation(const std::vector<Enemy>& enemies) const;
 			glm::vec3 cohesion(const std::vector<Enemy>& enemies) const;
+			glm::vec3 chaseAlignment(const std::vector<Enemy>& enemies, const Player& player) const;
 			glm::vec3 patrollVector() const;
 
 		private:

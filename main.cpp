@@ -11,6 +11,9 @@ using App = GAME_NAMESPACE::Game;
 * - stationary objects like asteroids must be added, as well as dynamic meteors
 * - learn about rng
 * - draw textures
+* 
+* Super later
+* **Haiving acceptable behaviour but it still can be improved
 */
 
 int main(int argc, char** argv)
