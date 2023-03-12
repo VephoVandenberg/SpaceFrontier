@@ -9,7 +9,7 @@
 
 using namespace GAME_NAMESPACE::GameModule;
 
-constexpr float g_enemyVelocityCoeff = 300.0f;
+constexpr float g_enemyVelocityCoeff = 250.0f;
 constexpr float g_attackRange = 500.0f;
 constexpr float g_deltaAngle = 180.0f;
 constexpr float g_PI = 3.14159265359f;
@@ -132,7 +132,7 @@ void Enemy::update(float dt, float borderX, float borderY, Player& player, const
 			m_state = EnemyState::Fighting;
 			m_timer = 0.0f;
 		}
-		else if (glm::length(m_pos - player.getPos()) > g_attackRange + 800.0f)
+		else if (glm::length(m_pos - player.getPos()) > g_attackRange + 400.0f)
 		{
 			m_state = EnemyState::Patrolling;
 			m_timer = 0.0f;
@@ -250,7 +250,7 @@ glm::vec3 Enemy::cohesion(const std::vector<Enemy>& enemies) const
 
 glm::vec3 Enemy::patrollVector() const
 {
-	float angle = m_angle + 10.0f;
+	float angle = m_angle + 20.0f;
 	glm::vec3 patrollVector = glm::vec3(0.0f);
 
 	patrollVector.x = glm::sin(glm::radians(angle));

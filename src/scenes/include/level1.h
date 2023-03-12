@@ -8,6 +8,7 @@
 #include "../../game_modules/include/group_holder.h"
 #include "../../game_modules/include/player.h"
 #include "../../game_modules/include/enemies/enemy.h"
+#include "../../game_modules/include/enemies/marker.h"
 #include "../../game_modules/include/space_objects/space_object.h"
 
 #include "scene.h"
@@ -49,6 +50,8 @@ namespace GAME_NAMESPACE
 		private:
 			void processCollisions();
 			void renderEnemy(GameModule::Enemy& enemy, const glm::vec3& cameraView);
+			void renderMarker(GameModule::Marker& marker, const glm::vec3& cameraView);
+			bool enemyOutOfBorder(const GameModule::Enemy& enemy, const glm::vec3& cameraView);
 
 			float m_width;
 			float m_height;
@@ -57,6 +60,7 @@ namespace GAME_NAMESPACE
 			GameModule::Player& m_player;
 			std::vector<GameModule::Enemy> m_enemies;
 			std::vector<GameModule::SpaceObj> m_spaceObjects;
+			std::vector<GameModule::Marker> m_markers;
 
 			using Group = GAME_NAMESPACE::GameModule::DataStructures::GroupHolder;
 			std::array<Group, g_enemyGroupNumber> m_enemyGroups;

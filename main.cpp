@@ -11,9 +11,10 @@ using App = GAME_NAMESPACE::Game;
 * - stationary objects like asteroids must be added, as well as dynamic meteors
 * - learn about rng
 * - draw textures
-* 
+* - restict the group where to fly, enemies fly away too far
 * Super later
-* **Haiving acceptable behaviour but it still can be improved
+* - MOve marker part of the enemy
+* - Haiving acceptable behaviour but it still can be improved
 */
 
 int main(int argc, char** argv)

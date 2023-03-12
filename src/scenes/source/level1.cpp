@@ -44,6 +44,7 @@ void Level1::onAttach()
 	{
 		m_enemies.emplace_back(GameModule::Enemy(glm::vec3(0.0f), g_baseEnemySize,
 			System::ResourceManager::getInstance().getTexture("enemy_base")));
+		m_markers.emplace_back(GameModule::Marker(glm::vec3(0.0f), glm::vec3(1.0f)));
 	}
 
 	for (auto& enemy : m_enemies)
@@ -66,15 +67,20 @@ void Level1::update(float dt, const glm::vec3& cameraView)
 {
 	processCollisions();
 
-	for (auto it_enemy = m_enemies.begin(); 
-		it_enemy != m_enemies.end(); 
-		it_enemy++)
+	for (unsigned int i = 0;
+		i < m_enemies.size(); 
+		i++)
 	{
 		// Update enemies
-		it_enemy->update(dt, m_width, m_height, m_player, cameraView, m_enemies);
-		renderEnemy(*it_enemy, cameraView);
+		m_enemies[i].update(dt, m_width, m_height, m_player, cameraView, m_enemies);
+		m_markers[i].update(dt, m_player.getPos(), m_enemies[i].getPos());
+		renderEnemy(m_enemies[i], cameraView);
+		if (enemyOutOfBorder(m_enemies[i], cameraView))
+		{
+			renderMarker(m_markers[i], cameraView);
+		}
 
-		if (!m_player.isAlive())
+		if (!m_player.isAlive() || m_enemies.empty())
 		{
 			m_nextScene = Scenes::MenuScene;
 		}
@@ -82,6 +88,17 @@ void Level1::update(float dt, const glm::vec3& cameraView)
 
 
 	render(cameraView);
+}
+
+bool Level1::enemyOutOfBorder(const GameModule::Enemy& enemy, const glm::vec3& cameraView)
+{
+	bool isOutX = 
+		0.0f > enemy.getPos().x - enemy.getScale().x - cameraView.x ||
+		m_width < enemy.getPos().x - cameraView.x;
+	bool isOutY =
+		0.0f > enemy.getPos().y - enemy.getScale().y - cameraView.y ||
+		m_height < enemy.getPos().y - cameraView.y;
+	return isOutX || isOutY;
 }
 
 void Level1::render(const glm::vec3& cameraView)
@@ -96,20 +113,32 @@ void Level1::renderEnemy(GameModule::Enemy& enemy, const glm::vec3& cameraView)
 	enemy.drawProjectiles(System::ResourceManager::getInstance().getShader("base_proj"), m_renderer, cameraView);
 }
 
+void Level1::renderMarker(GameModule::Marker& marker, const glm::vec3& cameraView)
+{
+	marker.draw(System::ResourceManager::getInstance().getShader("panel_obj"), m_renderer, cameraView);
+}
+
 void Level1::processCollisions()
 {
+	int markersToRemove = 0;
 	m_enemies.erase(
 		std::remove_if(
 			m_enemies.begin(),
 			m_enemies.end(),
-			[](const GameModule::Enemy& enemy) {
+			[&](const GameModule::Enemy& enemy) {
 				if (enemy.isAlive())
 				{
 					return false;
 				}
+				markersToRemove++;
 				return true;
 			}),
 		m_enemies.end());
+
+	for (unsigned int i = 0; i < markersToRemove; i++)
+	{
+		m_markers.pop_back();
+	}
 }
 
 void Level1::processInput(float dt, glm::vec3& cameraView, const glm::vec3& cursorPos, bool* const keys)
