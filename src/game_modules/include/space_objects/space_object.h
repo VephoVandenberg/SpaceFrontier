@@ -18,7 +18,10 @@ namespace GAME_NAMESPACE
 		public:
 			SpaceObj(glm::vec3 pos, glm::vec3 scale, System::Texture& texture);
 
-			virtual void update(float dt, float borderX, float borderY, Player& player, const glm::vec3& cameraPos, const std::vector<Enemy>& enemies);
+			virtual void update(
+				float dt, 
+				Player& player,std::vector<Enemy>& enemies,
+				const glm::vec3& cameraPos) = 0;
 			void draw(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos) override;
 
 			SpaceObj() = default;
@@ -30,7 +33,7 @@ namespace GAME_NAMESPACE
 			SpaceObj& operator=(const SpaceObj&) = delete;
 
 		protected:
-			unsigned int m_damage = 5;
+			unsigned int m_damage = 30;
 
 			System::Texture& m_texture;
 		};

@@ -35,7 +35,7 @@ namespace GAME_NAMESPACE
 			void drawProjectiles(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos);
 			void drawMarker(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos);
 
-			inline void takeDamage() { m_health--; }
+			inline void takeDamage(unsigned int damage = 1) { m_health -= damage; }
 			inline bool isAlive() const { return m_health > 0; }
 
 			bool operator==(const Enemy& enemy) const;
