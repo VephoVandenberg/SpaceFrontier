@@ -37,39 +37,9 @@ void Game::init()
 
 	m_window = std::unique_ptr<System::Window>(new System::Window(data));
 	m_renderer = std::unique_ptr<System::Renderer>(new System::Renderer);
-
-	System::ResourceManager::getInstance()
-		.setShader("base_obj", "shaders/base_obj_shader.vert", "shaders/base_obj_shader.frag");
-	System::ResourceManager::getInstance()
-		.setShader("base_proj", "shaders/base_proj_shader.vert", "shaders/base_proj_shader.frag");
-	System::ResourceManager::getInstance()
-		.setShader("base_button", "shaders/button_shader.vert", "shaders/button_shader.frag");
-	System::ResourceManager::getInstance()
-		.setShader("panel_obj", "shaders/panel_shader.vert", "shaders/panel_shader.frag");
-
-	System::ResourceManager::getInstance()
-		.setTexture("player", "textures/player_ship.png");
-	System::ResourceManager::getInstance()
-		.setTexture("enemy_base", "textures/enemy_ship.png");
-	System::ResourceManager::getInstance()
-		.setTexture("start_button", "textures/start_button.png");
-	System::ResourceManager::getInstance()
-		.setTexture("exit_button", "textures/exit_button.png");
-	System::ResourceManager::getInstance()
-		.setTexture("asteroid_huge_minerals", "textures/asteroid_huge_minerals.png");
-	System::ResourceManager::getInstance()
-		.setTexture("asteroid_huge", "textures/asteroid_huge.png");
-	System::ResourceManager::getInstance()
-		.setTexture("asteroid_large_minerals", "textures/asteroid_large_minerals.png");
-	System::ResourceManager::getInstance()
-		.setTexture("asteroid_large", "textures/asteroid_large.png");
-	System::ResourceManager::getInstance()
-		.setTexture("asteroid_medium_minerals", "textures/asteroid_medium_minerals.png");
-	System::ResourceManager::getInstance()
-		.setTexture("asteroid_medium", "textures/asteroid_medium.png");
-	System::ResourceManager::getInstance()
-		.setTexture("asteroid_small", "textures/asteroid_small.png");
-
+	
+	initShaders();
+	initTextures();
 
 	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(m_window->getWidth()),
 		static_cast<float>(m_window->getHeight()), 0.0f, -1.0f, 1.0f);
@@ -139,6 +109,44 @@ void Game::onEvent(System::Event& event)
 	default:
 	{}break;
 	}
+}
+
+void Game::initShaders()
+{
+	System::ResourceManager::getInstance()
+		.setShader("base_obj", "shaders/base_obj_shader.vert", "shaders/base_obj_shader.frag");
+	System::ResourceManager::getInstance()
+		.setShader("base_proj", "shaders/base_proj_shader.vert", "shaders/base_proj_shader.frag");
+	System::ResourceManager::getInstance()
+		.setShader("base_button", "shaders/button_shader.vert", "shaders/button_shader.frag");
+	System::ResourceManager::getInstance()
+		.setShader("panel_obj", "shaders/panel_shader.vert", "shaders/panel_shader.frag");
+}
+
+void Game::initTextures()
+{
+	System::ResourceManager::getInstance()
+		.setTexture("player", "textures/player_ship.png");
+	System::ResourceManager::getInstance()
+		.setTexture("enemy_base", "textures/enemy_ship.png");
+	System::ResourceManager::getInstance()
+		.setTexture("start_button", "textures/start_button.png");
+	System::ResourceManager::getInstance()
+		.setTexture("exit_button", "textures/exit_button.png");
+	System::ResourceManager::getInstance()
+		.setTexture("asteroid_huge_minerals", "textures/asteroid_huge_minerals.png");
+	System::ResourceManager::getInstance()
+		.setTexture("asteroid_huge", "textures/asteroid_huge.png");
+	System::ResourceManager::getInstance()
+		.setTexture("asteroid_large_minerals", "textures/asteroid_large_minerals.png");
+	System::ResourceManager::getInstance()
+		.setTexture("asteroid_large", "textures/asteroid_large.png");
+	System::ResourceManager::getInstance()
+		.setTexture("asteroid_medium_minerals", "textures/asteroid_medium_minerals.png");
+	System::ResourceManager::getInstance()
+		.setTexture("asteroid_medium", "textures/asteroid_medium.png");
+	System::ResourceManager::getInstance()
+		.setTexture("asteroid_small", "textures/asteroid_small.png");
 }
 
 void Game::run()

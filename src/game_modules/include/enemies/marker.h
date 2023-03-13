@@ -11,7 +11,7 @@ namespace GAME_NAMESPACE
 		class Marker : public GameObj
 		{
 		public:
-			Marker(glm::vec3 pos, glm::vec3 color, float angle = 0.0f);
+			Marker(glm::vec3 color, float angle = 0.0f);
 
 			void update(float dt, glm::vec3 playerPos, glm::vec3 enemyPos);
 

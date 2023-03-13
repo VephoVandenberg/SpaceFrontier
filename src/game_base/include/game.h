@@ -29,6 +29,8 @@ namespace GAME_NAMESPACE
 
 	private:
 		void init();
+		void initShaders();
+		void initTextures();
 		void switchScene();
 		void onEvent(System::Event& event);
 

@@ -3,6 +3,8 @@
 #include <list>
 #include <vector>
 
+#include "marker.h"
+
 #include "../game_object.h"
 #include "../projectile.h"
 
@@ -31,6 +33,7 @@ namespace GAME_NAMESPACE
 
 			void draw(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos) override;
 			void drawProjectiles(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos);
+			void drawMarker(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos);
 
 			inline void takeDamage() { m_health--; }
 			inline bool isAlive() const { return m_health > 0; }
@@ -65,6 +68,8 @@ namespace GAME_NAMESPACE
 
 			std::list<Projectile> m_projectiles;
 			EnemyState m_state = EnemyState::Patrolling;
+
+			Marker m_marker;
 		};
 	}
 }

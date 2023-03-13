@@ -22,6 +22,7 @@ Enemy::Enemy(glm::vec3 pos, glm::vec3 scale, System::Texture& texture)
 	, m_health(3)
 	, m_timer(0.0f)
 	, m_state(EnemyState::Patrolling)
+	, m_marker(glm::vec3(1.0f))
 {
 	m_angle = (rand() % 360);
 
@@ -155,6 +156,9 @@ void Enemy::update(float dt, float borderX, float borderY, Player& player, const
 		m_projectiles.pop_front();
 	}
 
+	// Marker update
+	m_marker.update(dt, player.getPos(), m_pos);
+
 	// Check if player was hit by projectile
 	unsigned int damage = 0;
 	m_projectiles.erase(
@@ -277,6 +281,11 @@ void Enemy::drawProjectiles(System::Shader& shader, System::Renderer& renderer, 
 	{
 		proj.draw(shader, renderer, cameraPos);
 	}
+}
+
+void Enemy::drawMarker(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos)
+{
+	m_marker.draw(shader, renderer, cameraPos);
 }
 
 bool Enemy::operator==(const Enemy& enemy) const

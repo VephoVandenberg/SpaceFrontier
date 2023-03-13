@@ -50,7 +50,6 @@ namespace GAME_NAMESPACE
 		private:
 			void processCollisions();
 			void renderEnemy(GameModule::Enemy& enemy, const glm::vec3& cameraView);
-			void renderMarker(GameModule::Marker& marker, const glm::vec3& cameraView);
 			bool enemyOutOfBorder(const GameModule::Enemy& enemy, const glm::vec3& cameraView);
 
 			float m_width;
@@ -60,7 +59,6 @@ namespace GAME_NAMESPACE
 			GameModule::Player& m_player;
 			std::vector<GameModule::Enemy> m_enemies;
 			std::vector<GameModule::SpaceObj> m_spaceObjects;
-			std::vector<GameModule::Marker> m_markers;
 
 			using Group = GAME_NAMESPACE::GameModule::DataStructures::GroupHolder;
 			std::array<Group, g_enemyGroupNumber> m_enemyGroups;
