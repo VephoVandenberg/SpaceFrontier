@@ -1,6 +1,6 @@
 #pragma once
 
-#include "space_object.h"
+#include "../game_object.h"
 
 namespace GAME_NAMESPACE
 {
@@ -8,7 +8,7 @@ namespace GAME_NAMESPACE
 	{
 		enum class MeteoriteType
 		{
-			Small,
+			Small = 1,
 			Medium
 		};
 
@@ -18,50 +18,43 @@ namespace GAME_NAMESPACE
 			constexpr unsigned int g_hitsForMedium = 3;
 		}
 
-		class Meteorite : public SpaceObj
+		class System::Texture;
+
+		class Player;
+		class Enemy;
+
+		class Meteorite : public GameObj
 		{
 		public:
-			Meteorite(glm::vec3 pos, glm::vec3 scale, System::Texture& texture, MeteoriteType type = MeteoriteType::Small);
+			Meteorite(glm::vec3 pos, glm::vec3 orientation, System::Texture& texture, MeteoriteType type = MeteoriteType::Small);
 
 			void update(
 				float dt,
 				Player& player, std::vector<Enemy>& enemies,
-				const glm::vec3& cameraPos) override;
+				const glm::vec3& cameraPos);
+			void draw(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos) override;
+			bool isOut(float left, float right, float bottom, float up) const;
 
 			Meteorite() = default;
 			~Meteorite() = default;
 			Meteorite(Meteorite&&) = default;
 			Meteorite& operator=(Meteorite&&) = default;
 
-			Meteorite(const Meteorite&) = delete;
-			Meteorite& operator=(const Meteorite&) = delete;
+			Meteorite(const Meteorite&) = default;
+			Meteorite& operator=(const Meteorite&) = default;
 
 		private:
+			float m_damage = 30.0f;
+
 			struct MeteoriteInfo
 			{
 				unsigned int m_hitsToTake;
 				MeteoriteType m_type;
-
-				MeteoriteInfo(MeteoriteType type)
-					: m_type(type)
-				{
-					switch (m_type)
-					{
-					case MeteoriteType::Small:
-					{
-						m_hitsToTake = g_hitsForSmall;
-					}
-
-					case MeteoriteType::Medium:
-					{
-						m_hitsToTake = g_hitsForMedium;
-					}
-
-					}
-				}
 			} m_meteoriteInfo;
 
 			glm::vec3 m_velocity = { 0.0f, 0.0f, 0.0f };
+
+			System::Texture& m_texture;
 		};
 	}
 }

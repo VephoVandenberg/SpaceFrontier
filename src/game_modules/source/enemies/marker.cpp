@@ -2,7 +2,7 @@
 
 using namespace GAME_NAMESPACE::GameModule;
 
-constexpr glm::vec3 g_markerScale = { 3.0f, 3.0f, 0.0f };
+constexpr glm::vec3 g_markerScale = { 2.0f, 2.0f, 0.0f };
 constexpr float g_markerPosMagnitude = 300.0f;
 
 Marker::Marker(glm::vec3 color, float angle)

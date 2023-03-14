@@ -6,10 +6,36 @@ using namespace GAME_NAMESPACE::GameModule;
 constexpr float g_velocityCoeff = 250.0f;
 constexpr float g_deltaAngle = 30.0f;
 
-Meteorite::Meteorite(glm::vec3 pos, glm::vec3 scale, System::Texture& texture, MeteoriteType type)
-	: SpaceObj(pos, scale, texture)
-	, m_meteoriteInfo(type)
-{}
+constexpr float g_mediumMeteoriteMagnitude = 160.0f;
+constexpr float g_smalleMeteoriteMagnitude = 100.0f;
+
+Meteorite::Meteorite(glm::vec3 pos, glm::vec3 orientation, System::Texture& texture, MeteoriteType type)
+	: GameObj(pos, glm::vec3(1.0f))
+	, m_texture(texture)
+{
+	m_velocity = g_velocityCoeff * orientation;
+
+	m_meteoriteInfo.m_type = type;
+	switch (type)
+	{
+	case MeteoriteType::Medium:
+	{
+		m_meteoriteInfo.m_hitsToTake = g_hitsForMedium;
+		m_scale = glm::vec3(
+			g_mediumMeteoriteMagnitude
+		);
+	}break;
+
+	case MeteoriteType::Small:
+	default:
+	{
+		m_meteoriteInfo.m_hitsToTake = g_hitsForMedium;
+		m_scale = glm::vec3(
+			g_smalleMeteoriteMagnitude
+		);
+	}break;
+	}
+}
 
 void Meteorite::update(
 	float dt,
@@ -23,7 +49,7 @@ void Meteorite::update(
 
 	for (auto& enemy : enemies)
 	{
-		if (checkCollision(player))
+		if (checkCollision(enemy))
 		{
 			enemy.takeDamage(m_damage);
 		}
@@ -32,3 +58,20 @@ void Meteorite::update(
 	m_angle += g_deltaAngle * dt;
 	m_pos += m_velocity * dt;
 }
+
+bool Meteorite::isOut(float left, float right, float bottom, float up) const
+{
+	bool isOutX =
+		m_pos.x - m_scale.y >= right ||
+		m_pos.y - m_scale.y >= up;
+	bool isOutY =
+		m_pos.x + m_scale.y <= left ||
+		m_pos.y + m_scale.y <= bottom;
+	return isOutX || isOutY;
+}
+
+void Meteorite::draw(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos)
+{
+	renderer.draw(m_angle, m_pos, m_scale, cameraPos, shader, m_texture);
+}
+

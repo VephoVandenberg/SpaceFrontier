@@ -22,13 +22,19 @@ namespace GAME_NAMESPACE
 
 		class System::Texture;
 		class Player;
+		class Meteorite;
 
 		class Enemy : public GameObj
 		{
 		public:
 			Enemy(glm::vec3 pos, glm::vec3 scale, System::Texture& texture);
 
-			virtual void update(float dt, float borderX, float borderY, Player& player, const glm::vec3& cameraPos, const std::vector<Enemy>& enemies);
+			virtual void update(
+				float dt, 
+				float borderX, float borderY, 
+				Player& player, 
+				const glm::vec3& cameraPos, 
+				const std::vector<Enemy>& enemies, const std::list<Meteorite>& meteorites);
 			virtual void shoot();
 
 			void draw(System::Shader& shader, System::Renderer& renderer, const glm::vec3& cameraPos) override;
@@ -52,9 +58,10 @@ namespace GAME_NAMESPACE
 		protected:
 			// Boid rules
 			glm::vec3 alignment(const std::vector<Enemy>& enemies) const;
-			glm::vec3 separation(const std::vector<Enemy>& enemies) const;
 			glm::vec3 cohesion(const std::vector<Enemy>& enemies) const;
 			glm::vec3 chaseAlignment(const std::vector<Enemy>& enemies, const Player& player) const;
+			glm::vec3 separation(const std::vector<Enemy>& enemies) const;
+			glm::vec3 meteoriteSeparation(const std::list<Meteorite>& meteorites) const;
 			glm::vec3 patrollVector() const;
 
 		private:

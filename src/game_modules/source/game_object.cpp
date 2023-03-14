@@ -19,8 +19,12 @@ void GameObj::draw(System::Shader& shader, System::Renderer& renderer, const glm
 
 bool GameObj::checkCollision(const GameObj& obj) const
 {
-	bool collisionX = m_pos.x + m_scale.x >= obj.m_pos.x && obj.m_pos.x + obj.m_scale.x >= m_pos.x;
-	bool collisionY = m_pos.y + m_scale.y >= obj.m_pos.y && obj.m_pos.y + obj.m_scale.y >= m_pos.y;
+	bool collisionX = 
+		m_pos.x + m_scale.x >= obj.m_pos.x && 
+		obj.m_pos.x + obj.m_scale.x>= m_pos.x;
+	bool collisionY = 
+		m_pos.y + m_scale.y >= obj.m_pos.y &&
+		obj.m_pos.y + obj.m_scale.y >= m_pos.y;
 
 	return collisionX && collisionY;
 }

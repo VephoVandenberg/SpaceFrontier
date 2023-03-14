@@ -20,13 +20,12 @@ void Projectile::update(float dt)
 
 bool Projectile::isOut(float left, float right, float bottom, float up) const
 {
-	if (m_pos.x - m_scale.y >= right ||
-		m_pos.y - m_scale.y >= up ||
-		m_pos.x + m_scale.y <= left||
-		m_pos.y + m_scale.y <= bottom)
-	{
-		return true;
-	}
-	return false;
+	bool isOutX =
+		m_pos.x - m_scale.y >= right ||
+		m_pos.y - m_scale.y >= up;
+	bool isOutY =
+		m_pos.x + m_scale.y <= left ||
+		m_pos.y + m_scale.y <= bottom;
+	return isOutX || isOutY;
 }
  

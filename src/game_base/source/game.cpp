@@ -142,11 +142,11 @@ void Game::initTextures()
 	System::ResourceManager::getInstance()
 		.setTexture("asteroid_large", "textures/asteroid_large.png");
 	System::ResourceManager::getInstance()
-		.setTexture("asteroid_medium_minerals", "textures/asteroid_medium_minerals.png");
+		.setTexture("meteorite_medium_minerals", "textures/asteroid_medium_minerals.png");
 	System::ResourceManager::getInstance()
-		.setTexture("asteroid_medium", "textures/asteroid_medium.png");
+		.setTexture("meteorite_medium", "textures/asteroid_medium.png");
 	System::ResourceManager::getInstance()
-		.setTexture("asteroid_small", "textures/asteroid_small.png");
+		.setTexture("meteorite_small", "textures/asteroid_small.png");
 }
 
 void Game::run()

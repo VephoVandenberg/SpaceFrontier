@@ -5,10 +5,11 @@ using App = GAME_NAMESPACE::Game;
 /*
 * TODO List
 * Agenda:
+* - stationary objects like asteroids must be added, as well as dynamic meteors
 * Later:
 * - how the map should be drawn, think about it?
 * - simple init of space objects
-* - stationary objects like asteroids must be added, as well as dynamic meteors
+* - think about adding the particle system
 * - learn about rng
 * - draw textures
 * - restrict the group where to fly, enemies fly away too far
