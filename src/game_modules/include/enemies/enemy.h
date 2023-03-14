@@ -62,6 +62,7 @@ namespace GAME_NAMESPACE
 			glm::vec3 chaseAlignment(const std::vector<Enemy>& enemies, const Player& player) const;
 			glm::vec3 separation(const std::vector<Enemy>& enemies) const;
 			glm::vec3 meteoriteSeparation(const std::list<Meteorite>& meteorites) const;
+			glm::vec3 playerSeparation(const Player& player) const;
 			glm::vec3 patrollVector() const;
 
 		private:

@@ -53,6 +53,7 @@ void Enemy::update(
 		glm::vec3 v3 = separation(enemies);
 		glm::vec3 v4 = patrollVector();
 		glm::vec3 v5 = meteoriteSeparation(meteorites);
+		glm::vec3 v6 = playerSeparation(player);
 
 		m_velocity = m_velocity + (v1 + v2 + v3 + v4 + v5);
 		m_velocity = g_enemyVelocityCoeff * glm::normalize(m_velocity);
@@ -85,16 +86,17 @@ void Enemy::update(
 
 	case EnemyState::Fighting:
 	{
-		glm::vec3 v = meteoriteSeparation(meteorites);
-		m_velocity = m_velocity + v;
-		m_velocity = g_enemyVelocityCoeff * glm::normalize(m_velocity);
+		glm::vec3 v1 = meteoriteSeparation(meteorites);
+		glm::vec3 v2 = playerSeparation(player);
 
 		// If the length of the separation vector is positive
 		// then there is a meteorite that should be avoided
-		if (v.x > 0)
+
+		if (glm::length(v1) > 0)
 		{
-			m_pos += m_velocity * dt;
+			m_pos += g_enemyVelocityCoeff * glm::normalize(v1) * dt;
 		}
+		m_pos += v2 * dt;
 
 		glm::vec2 distToPlayer = player.getPos() + player.getScale() / 4.0f - m_pos;
 		float angle = glm::orientedAngle(glm::normalize(distToPlayer), glm::vec2(m_orientation));
@@ -132,8 +134,9 @@ void Enemy::update(
 		glm::vec3 v3 = separation(enemies);
 		glm::vec3 v4 = chaseAlignment(enemies, player);
 		glm::vec3 v5 = meteoriteSeparation(meteorites);
+		glm::vec3 v6 = playerSeparation(player);
 
-		m_velocity = m_velocity + (v2 + v3 + v4 + v5);
+		m_velocity = m_velocity + (v2 + v3 + v4 + v5 + v6);
 		m_velocity = g_enemyVelocityCoeff * glm::normalize(m_velocity);
 
 		glm::vec2 normVel = glm::normalize(m_velocity);
@@ -249,13 +252,21 @@ glm::vec3 Enemy::meteoriteSeparation(const std::list<Meteorite>& meteorites) con
 
 	for (auto& meteorite : meteorites)
 	{
-		if (glm::length(m_pos - meteorite.getPos()) < 140.0f)
+		if (glm::length(m_pos - meteorite.getPos()) < 160.0f)
 		{
 			separation += (m_pos - meteorite.getPos());
 		}
 	}
 
 	return separation;
+}
+
+glm::vec3 Enemy::playerSeparation(const Player& player) const
+{
+	return
+		(glm::length(m_pos - player.getPos()) < 130.0f) ?
+		(m_pos - player.getPos()) : glm::vec3(0.0f);
+
 }
 
 glm::vec3 Enemy::cohesion(const std::vector<Enemy>& enemies) const

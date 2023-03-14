@@ -159,10 +159,12 @@ void Level1::spawnMeteorite(const glm::vec3& cameraView)
 		0.0f
 	};
 
-	glm::vec3 pos = {
-		cameraView.x + (partX - 1) * m_width / 2.0f,
-		cameraView.y + (partY - 1) * m_height / 2.0f,
-		0.0f };
+	float posX =
+		(partX == 1) ? cameraView.x - 100.0f : cameraView.x + m_width + 100.0f;
+	float posY = 
+		(partY == 1) ? cameraView.y - 100.0f : cameraView.y + m_height + 100.0f;
+
+	glm::vec3 pos = {posX, posY, 0.0f };
 
 	unsigned int type = rand() % 2 + 1;
 	GameModule::MeteoriteType meteorType = static_cast<GameModule::MeteoriteType>(type);
