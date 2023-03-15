@@ -1,6 +1,7 @@
 #include <time.h>
 #include <glfw3.h>
 
+
 #include "../../system/include/resource_manager.h"
 
 #include "../include/level1.h"
@@ -8,6 +9,7 @@
 using namespace GAME_NAMESPACE::GameScene;
 
 constexpr glm::vec3 g_baseEnemySize = { 80.0f, 80.0f, 0.0f };
+constexpr glm::vec3 g_asteroidBorderInitPos = { -700.0f, -700.0f, 0.0f };
 constexpr float g_deltaAngle = 75.0f;
 constexpr float g_groupWidth = 400.0f;
 constexpr float g_groupHeight = 700.0f;
@@ -32,8 +34,10 @@ Level1::~Level1()
 
 void Level1::onAttach()
 {
-	glm::vec3 initialEnemyGroupPos = glm::vec3(500.0f, 200.0f, 0.0f);
+	// Init level borders
+	initAsteroidBoundaries();
 	// Init groups
+	glm::vec3 initialEnemyGroupPos = glm::vec3(500.0f, 200.0f, 0.0f);
 	for (auto& group : m_enemyGroups)
 	{
 		srand(time(nullptr));
@@ -66,12 +70,18 @@ void Level1::onDetatch()
 
 void Level1::update(float dt, const glm::vec3& cameraView)
 {
-	processCollisions();
+	processDeadEnemies();
+	// Update asteroids
+	for (auto& asteroid : m_asteroids)
+	{
+		asteroid.update(dt, m_player, m_enemies, cameraView);
+		asteroid.draw(System::ResourceManager::getInstance().getShader("base_obj"), m_renderer, cameraView);
+	}
 
 	// Handle meteorite spawn and update
-	if (!m_spaceObjects.empty())
+	if (!m_meteorites.empty())
 	{
-		for (auto& spaceObj : m_spaceObjects)
+		for (auto& spaceObj : m_meteorites)
 		{
 			spaceObj.update(dt, m_player, m_enemies, cameraView);
 			spaceObj.draw(
@@ -79,11 +89,11 @@ void Level1::update(float dt, const glm::vec3& cameraView)
 				m_renderer, cameraView);
 		}
 
-		if (m_spaceObjects.back().isOut(
+		if (m_meteorites.back().isOut(
 			cameraView.x, cameraView.x + m_width,
 			cameraView.y, cameraView.y + m_height))
 		{
-			m_spaceObjects.pop_front();
+			m_meteorites.pop_front();
 		}
 	}
 	else
@@ -97,7 +107,7 @@ void Level1::update(float dt, const glm::vec3& cameraView)
 		i++)
 	{
 		// Update enemies
-		m_enemies[i].update(dt, m_width, m_height, m_player, cameraView, m_enemies, m_spaceObjects);
+		m_enemies[i].update(dt, m_width, m_height, m_player, cameraView, m_enemies, m_meteorites, m_asteroids);
 		renderEnemy(m_enemies[i], cameraView);
 		if (enemyOutOfBorder(m_enemies[i], cameraView))
 		{
@@ -109,11 +119,16 @@ void Level1::update(float dt, const glm::vec3& cameraView)
 
 	if (!m_player.isAlive() || m_enemies.empty())
 	{
-		m_nextScene = Scenes::MenuScene;
+		if (m_timer > 5.0f)
+		{
+			m_nextScene = Scenes::MenuScene;
+		}
+		m_timer += dt;
 	}
-
-
-	render(cameraView);
+	else
+	{
+		render(cameraView);
+	}
 }
 
 bool Level1::enemyOutOfBorder(const GameModule::Enemy& enemy, const glm::vec3& cameraView)
@@ -161,10 +176,10 @@ void Level1::spawnMeteorite(const glm::vec3& cameraView)
 
 	float posX =
 		(partX == 1) ? cameraView.x - 100.0f : cameraView.x + m_width + 100.0f;
-	float posY = 
+	float posY =
 		(partY == 1) ? cameraView.y - 100.0f : cameraView.y + m_height + 100.0f;
 
-	glm::vec3 pos = {posX, posY, 0.0f };
+	glm::vec3 pos = { posX, posY, 0.0f };
 
 	unsigned int type = rand() % 2 + 1;
 	GameModule::MeteoriteType meteorType = static_cast<GameModule::MeteoriteType>(type);
@@ -172,7 +187,7 @@ void Level1::spawnMeteorite(const glm::vec3& cameraView)
 	{
 	case GameModule::MeteoriteType::Small:
 	{
-		m_spaceObjects.emplace_back(
+		m_meteorites.emplace_back(
 			GameModule::Meteorite(pos, orienatation,
 				System::ResourceManager::getInstance().getTexture("meteorite_small"),
 				meteorType));
@@ -180,7 +195,7 @@ void Level1::spawnMeteorite(const glm::vec3& cameraView)
 
 	case GameModule::MeteoriteType::Medium:
 	{
-		m_spaceObjects.emplace_back(
+		m_meteorites.emplace_back(
 			GameModule::Meteorite(pos, orienatation,
 				System::ResourceManager::getInstance().getTexture("meteorite_medium"),
 				meteorType));
@@ -188,7 +203,50 @@ void Level1::spawnMeteorite(const glm::vec3& cameraView)
 	}
 }
 
-void Level1::processCollisions()
+void Level1::initAsteroidBoundaries()
+{
+	for (unsigned int y = 0; y < 30; y++)
+	{
+		if (y == 0 || y == 29)
+		{
+			for (unsigned int x = 0; x < 20; x++)
+			{
+				glm::vec3 pos = {
+					g_asteroidBorderInitPos.x + x * GameModule::Asteroid::s_asteroidSizes[GameModule::AsteroidType::Large],
+					g_asteroidBorderInitPos.y + y * GameModule::Asteroid::s_asteroidSizes[GameModule::AsteroidType::Large],
+					0.0f
+				};
+				m_asteroids.emplace_back(
+					GameModule::Asteroid(pos,
+						System::ResourceManager::getInstance().getTexture("asteroid_large"),
+						GameModule::AsteroidType::Large));
+			}
+		}
+		else
+		{
+			glm::vec3 leftPos = {
+				g_asteroidBorderInitPos.x + 0 * GameModule::Asteroid::s_asteroidSizes[GameModule::AsteroidType::Large],
+				g_asteroidBorderInitPos.y + y * GameModule::Asteroid::s_asteroidSizes[GameModule::AsteroidType::Large],
+				0.0f
+			};
+			glm::vec3 rightPos = {
+				g_asteroidBorderInitPos.x + 19 * GameModule::Asteroid::s_asteroidSizes[GameModule::AsteroidType::Large],
+				g_asteroidBorderInitPos.y + y * GameModule::Asteroid::s_asteroidSizes[GameModule::AsteroidType::Large],
+				0.0f
+			};
+			m_asteroids.emplace_back(
+				GameModule::Asteroid(leftPos,
+					System::ResourceManager::getInstance().getTexture("asteroid_large"),
+					GameModule::AsteroidType::Large));
+			m_asteroids.emplace_back(
+				GameModule::Asteroid(rightPos,
+					System::ResourceManager::getInstance().getTexture("asteroid_large"),
+					GameModule::AsteroidType::Large));
+		}
+	}
+}
+
+void Level1::processDeadEnemies()
 {
 	m_enemies.erase(
 		std::remove_if(
@@ -224,12 +282,16 @@ void Level1::processInput(float dt, glm::vec3& cameraView, const glm::vec3& curs
 	{
 		moveDir = GameModule::MoveDir::Bottom;
 	}
-	m_player.update(dt, da, m_width, m_height, cameraView, moveDir);
 
-	// NOTE: This solution is not final
-	if (keys[GLFW_MOUSE_BUTTON_LEFT])
+	if (m_player.isAlive())
 	{
-		m_player.shoot();
-		keys[GLFW_MOUSE_BUTTON_LEFT] = false;
+		m_player.update(dt, da, m_width, m_height, cameraView, moveDir);
+
+		// NOTE: This solution is not final
+		if (keys[GLFW_MOUSE_BUTTON_LEFT])
+		{
+			m_player.shoot();
+			keys[GLFW_MOUSE_BUTTON_LEFT] = false;
+		}
 	}
 }

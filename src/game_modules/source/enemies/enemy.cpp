@@ -5,6 +5,7 @@
 #include "../../include/enemies/enemy.h"
 #include "../../include/player.h"
 #include "../../include/space_objects/meteorite.h"
+#include "../../include/space_objects/asteroid.h"
 
 #include "../../../system/include/texture.h"
 
@@ -40,7 +41,8 @@ void Enemy::update(
 	float borderX, float borderY,
 	Player& player,
 	const glm::vec3& cameraPos,
-	const std::vector<Enemy>& enemies, const std::list<Meteorite>& meteorites)
+	const std::vector<Enemy>& enemies, 
+	const std::list<Meteorite>& meteorites, const std::vector<Asteroid>& asteroids)
 {
 	m_timer += dt;
 	// Enemy's behaviour
@@ -54,8 +56,9 @@ void Enemy::update(
 		glm::vec3 v4 = patrollVector();
 		glm::vec3 v5 = meteoriteSeparation(meteorites);
 		glm::vec3 v6 = playerSeparation(player);
+		glm::vec3 v7 = asteroidSeparation(asteroids);
 
-		m_velocity = m_velocity + (v1 + v2 + v3 + v4 + v5);
+		m_velocity = m_velocity + (v1 + v2 + v3 + v4 + v5 + v6 + v7);
 		m_velocity = g_enemyVelocityCoeff * glm::normalize(m_velocity);
 
 		// Turn the ship to align orienation vector and velocity
@@ -88,15 +91,18 @@ void Enemy::update(
 	{
 		glm::vec3 v1 = meteoriteSeparation(meteorites);
 		glm::vec3 v2 = playerSeparation(player);
+		glm::vec3 v3 = separation(enemies);
+		glm::vec3 v4 = asteroidSeparation(asteroids);
 
+		/*
 		// If the length of the separation vector is positive
 		// then there is a meteorite that should be avoided
-
 		if (glm::length(v1) > 0)
 		{
 			m_pos += g_enemyVelocityCoeff * glm::normalize(v1) * dt;
 		}
-		m_pos += v2 * dt;
+		*/
+		m_pos += (v1 + v2 + v3 + v4) * dt;
 
 		glm::vec2 distToPlayer = player.getPos() + player.getScale() / 4.0f - m_pos;
 		float angle = glm::orientedAngle(glm::normalize(distToPlayer), glm::vec2(m_orientation));
@@ -135,8 +141,9 @@ void Enemy::update(
 		glm::vec3 v4 = chaseAlignment(enemies, player);
 		glm::vec3 v5 = meteoriteSeparation(meteorites);
 		glm::vec3 v6 = playerSeparation(player);
+		glm::vec3 v7 = asteroidSeparation(asteroids);
 
-		m_velocity = m_velocity + (v2 + v3 + v4 + v5 + v6);
+		m_velocity = m_velocity + (v2 + v3 + v4 + v5 + v6 + v7);
 		m_velocity = g_enemyVelocityCoeff * glm::normalize(m_velocity);
 
 		glm::vec2 normVel = glm::normalize(m_velocity);
@@ -188,7 +195,7 @@ void Enemy::update(
 			m_projectiles.begin(),
 			m_projectiles.end(),
 			[&](const Projectile& proj) {
-				if (proj.checkCollision(player))
+				if (proj.checkCollision(player) && player.isAlive())
 				{
 					damage++;
 					return true;
@@ -267,6 +274,21 @@ glm::vec3 Enemy::playerSeparation(const Player& player) const
 		(glm::length(m_pos - player.getPos()) < 130.0f) ?
 		(m_pos - player.getPos()) : glm::vec3(0.0f);
 
+}
+
+glm::vec3 Enemy::asteroidSeparation(const std::vector<Asteroid>& asteroids) const
+{
+	glm::vec3 separation = glm::vec3(0.0f);
+
+	for (auto& asteroid : asteroids)
+	{
+		if (glm::length(m_pos - asteroid.getPos()) < 240.0f)
+		{
+			separation += (m_pos - asteroid.getPos());
+		}
+	}
+
+	return separation;
 }
 
 glm::vec3 Enemy::cohesion(const std::vector<Enemy>& enemies) const

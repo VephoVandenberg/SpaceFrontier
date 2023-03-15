@@ -10,35 +10,38 @@ constexpr float g_mediumAsteroidMagnitude = 160.0f;
 constexpr float g_largeAsteroidMagnitude = 220.0f;
 constexpr float g_hugeAsteroidMagnitude = 280.0f;
 
-Asteroid::Asteroid(glm::vec3 pos, glm::vec3 orientation, System::Texture& texture, AsteroidType type)
+std::map<const AsteroidType, const unsigned int> Asteroid::s_asteroidSizes = {
+	{AsteroidType::Medium, g_mediumAsteroidMagnitude},
+	{AsteroidType::Large, g_largeAsteroidMagnitude},
+	{AsteroidType::FuckinHuge, g_hugeAsteroidMagnitude}
+};
+
+Asteroid::Asteroid(glm::vec3 pos, System::Texture& texture, AsteroidType type)
 	: GameObj(pos, glm::vec3(1.0f))
 	, m_texture(texture)
 {
-	m_velocity = g_velocityCoeff * orientation;
-
 	m_asteroidInfo.m_type = type;
 	switch (type)
 	{
 	case AsteroidType::Medium:
 	{
-		m_asteroidInfo.m_hitsToTake = g_hitsForMedium;
 		m_scale = glm::vec3(
-			g_mediumAsteroidMagnitude
-		);
+			glm::vec2(s_asteroidSizes[AsteroidType::Medium]),
+			0.0f);
 	}break;
 
 	case AsteroidType::Large:
 	{
-		m_asteroidInfo.m_hitsToTake = g_hitsForMedium;
 		m_scale = glm::vec3(
-			g_largeAsteroidMagnitude);
+			glm::vec2(s_asteroidSizes[type]),
+			0.0f);
 	}break;
 
 	case AsteroidType::FuckinHuge:
 	{
-		m_asteroidInfo.m_hitsToTake = 10;
 		m_scale = glm::vec3(
-			g_hugeAsteroidMagnitude);
+			glm::vec2(s_asteroidSizes[type]),
+			0.0f);
 	}break;
 	}
 }

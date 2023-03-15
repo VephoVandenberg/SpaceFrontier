@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <map>
+
 #include "../game_object.h"
 
 namespace GAME_NAMESPACE
@@ -15,12 +17,6 @@ namespace GAME_NAMESPACE
 			FuckinHuge
 		};
 
-		namespace
-		{
-			constexpr unsigned int g_hitsForMedium = 15;
-			constexpr unsigned int g_hitsForLarge = 3;
-		}
-
 		class System::Texture;
 
 		class Player;
@@ -29,7 +25,7 @@ namespace GAME_NAMESPACE
 		class Asteroid : public GameObj
 		{
 		public:
-			Asteroid(glm::vec3 pos, glm::vec3 orientation, System::Texture& texture, AsteroidType type = AsteroidType::FuckinHuge);
+			Asteroid(glm::vec3 pos, System::Texture& texture, AsteroidType type = AsteroidType::FuckinHuge);
 
 			void update(
 				float dt,
@@ -43,19 +39,18 @@ namespace GAME_NAMESPACE
 			Asteroid(Asteroid&&) = default;
 			Asteroid& operator=(Asteroid&&) = default;
 
-			Asteroid(const Asteroid&) = default;
-			Asteroid& operator=(const Asteroid&) = default;
+			Asteroid(const Asteroid&) = delete;
+			Asteroid& operator=(const Asteroid&) = delete;
+
+			static std::map<const AsteroidType, const unsigned int> s_asteroidSizes;
 
 		private:
 			float m_damage = 30.0f;
 
 			struct AsteroidInfo
 			{
-				unsigned int m_hitsToTake;
 				AsteroidType m_type;
 			} m_asteroidInfo;
-
-			glm::vec3 m_velocity = { 0.0f, 0.0f, 0.0f };
 
 			System::Texture& m_texture;
 		};

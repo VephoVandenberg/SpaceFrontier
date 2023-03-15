@@ -11,6 +11,7 @@
 #include "../../game_modules/include/enemies/enemy.h"
 #include "../../game_modules/include/enemies/marker.h"
 #include "../../game_modules/include/space_objects/meteorite.h"
+#include "../../game_modules/include/space_objects/asteroid.h"
 
 #include "scene.h"
 
@@ -47,7 +48,8 @@ namespace GAME_NAMESPACE
 			void render(const glm::vec3& cameraView) override;
 
 		private:
-			void processCollisions();
+			void processDeadEnemies();
+			void initAsteroidBoundaries();
 			void renderEnemy(GameModule::Enemy& enemy, const glm::vec3& cameraView);
 			void spawnMeteorite(const glm::vec3& cameraView);
 			bool enemyOutOfBorder(const GameModule::Enemy& enemy, const glm::vec3& cameraView);
@@ -60,7 +62,8 @@ namespace GAME_NAMESPACE
 			System::Renderer& m_renderer;
 			GameModule::Player& m_player;
 			std::vector<GameModule::Enemy> m_enemies;
-			std::list<GameModule::Meteorite> m_spaceObjects;
+			std::vector<GameModule::Asteroid> m_asteroids;
+			std::list<GameModule::Meteorite> m_meteorites;
 
 			using Group = GAME_NAMESPACE::GameModule::DataStructures::GroupHolder;
 			std::array<Group, g_enemyGroupNumber> m_enemyGroups;
